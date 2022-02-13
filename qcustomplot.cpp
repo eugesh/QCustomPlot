@@ -6769,7 +6769,7 @@ QVector<double> QCPAxisTickerDateTime::createTickVector(double tickStep, const Q
 }
 
 /*!
-  A convenience method which turns \a key (in seconds since Epoch 1. Jan 1970, 00:00 UTC) into a
+  A convenience method which turns \a key (in milliseconds since Epoch 1. Jan 1970, 00:00 UTC) into a
   QDateTime object. This can be used to turn axis coordinates to actual QDateTimes.
   
   The accuracy achieved by this method is one millisecond, irrespective of the used Qt version (it
@@ -6780,16 +6780,16 @@ QVector<double> QCPAxisTickerDateTime::createTickVector(double tickStep, const Q
 QDateTime QCPAxisTickerDateTime::keyToDateTime(double key)
 {
 # if QT_VERSION < QT_VERSION_CHECK(4, 7, 0)
-  return QDateTime::fromTime_t(key).addMSecs((key-(qint64)key)*1000);
+  return QDateTime::fromTime_t(key).addMSecs((key-(qint64)key)/*1000*/);
 # else
-  return QDateTime::fromMSecsSinceEpoch(qint64(key*1000.0));
+  return QDateTime::fromMSecsSinceEpoch(qint64(key/*1000.0*/));
 # endif
 }
 
 /*! \overload
   
   A convenience method which turns a QDateTime object into a double value that corresponds to
-  seconds since Epoch (1. Jan 1970, 00:00 UTC). This is the format used as axis coordinates by
+  milliseconds since Epoch (1. Jan 1970, 00:00 UTC). This is the format used as axis coordinates by
   QCPAxisTickerDateTime.
   
   The accuracy achieved by this method is one millisecond, irrespective of the used Qt version (it
@@ -6800,9 +6800,9 @@ QDateTime QCPAxisTickerDateTime::keyToDateTime(double key)
 double QCPAxisTickerDateTime::dateTimeToKey(const QDateTime &dateTime)
 {
 # if QT_VERSION < QT_VERSION_CHECK(4, 7, 0)
-  return dateTime.toTime_t()+dateTime.time().msec()/1000.0;
+  return dateTime.toTime_t()+dateTime.time().msec();//1000.0;
 # else
-  return dateTime.toMSecsSinceEpoch()/1000.0;
+  return dateTime.toMSecsSinceEpoch();//1000.0;
 # endif
 }
 
