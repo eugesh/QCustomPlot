@@ -21019,6 +21019,12 @@ void QCPGraph::setAdaptiveSampling(bool enabled)
   mAdaptiveSampling = enabled;
 }
 
+void QCPGraph::setMaxCount(int count)
+{
+    mMaxCount = count;
+}
+
+
 /*! \overload
   
   Adds the provided points in \a keys and \a values to the current data. The provided vectors
@@ -21059,7 +21065,11 @@ void QCPGraph::addData(const QVector<double> &keys, const QVector<double> &value
 */
 void QCPGraph::addData(double key, double value)
 {
-  mDataContainer->add(QCPGraphData(key, value));
+    mDataContainer->add(QCPGraphData(key, value));
+    while (dataCount() > mMaxCount) {
+        // mDataContainer->begin() = mDataContainer->begin()++;
+        mDataContainer->removeBefore(mDataContainer->at(1)->key);
+    }
 }
 
 /*!
@@ -21675,7 +21685,6 @@ void QCPGraph::getOptimizedLineData(QVector<QCPGraphData> *lineData, const QCPGr
       maxCount = int(2*keyPixelSpan+2);
   }
   
-  if (mAdaptiveSampling && dataCount >= maxCount) // use adaptive sampling only if there are at least two points per pixel on average
   {
     QCPGraphDataContainer::const_iterator it = begin;
     double minValue = it->value;
@@ -21720,6 +21729,7 @@ void QCPGraph::getOptimizedLineData(QVector<QCPGraphData> *lineData, const QCPGr
         intervalDataCount = 1;
       }
       ++it;
+    if (mAdaptiveSampling && dataCount >= qMin(maxCount, mMaxCount)) // use adaptive sampling only if there are at least two points per pixel on average
     }
     // handle last interval:
     if (intervalDataCount >= 2) // last pixel had multiple data points, consolidate them to a cluster
