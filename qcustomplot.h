@@ -2607,7 +2607,7 @@ public:
   
   const_iterator constBegin() const { return mData.constBegin()+mPreallocSize; }
   const_iterator constEnd() const { return mData.constEnd(); }
-  iterator begin() { return mData.begin()+mPreallocSize; }
+  iterator begin() { return mData.begin() + mPreallocSize; }
   iterator end() { return mData.end(); }
   const_iterator findBegin(double sortKey, bool expandedRange=true) const;
   const_iterator findEnd(double sortKey, bool expandedRange=true) const;
@@ -2867,32 +2867,29 @@ void QCPDataContainer<DataType>::add(const QCPDataContainer<DataType> &data)
 template <class DataType>
 void QCPDataContainer<DataType>::add(const QVector<DataType> &data, bool alreadySorted)
 {
-  if (data.isEmpty())
-    return;
-  if (isEmpty())
-  {
-    set(data, alreadySorted);
-    return;
-  }
-  
-  const int n = data.size();
-  const int oldSize = size();
-  
-  if (alreadySorted && oldSize > 0 && !qcpLessThanSortKey<DataType>(*constBegin(), *(data.constEnd()-1))) // prepend if new data is sorted and keys are all smaller than or equal to existing ones
-  {
-    if (mPreallocSize < n)
-      preallocateGrow(n);
-    mPreallocSize -= n;
-    std::copy(data.constBegin(), data.constEnd(), begin());
-  } else // don't need to prepend, so append and then sort and merge if necessary
-  {
-    mData.resize(mData.size()+n);
-    std::copy(data.constBegin(), data.constEnd(), end()-n);
-    if (!alreadySorted) // sort appended subrange if it wasn't already sorted
-      std::sort(end()-n, end(), qcpLessThanSortKey<DataType>);
-    if (oldSize > 0 && !qcpLessThanSortKey<DataType>(*(constEnd()-n-1), *(constEnd()-n))) // if appended range keys aren't all greater than existing ones, merge the two partitions
-      std::inplace_merge(begin(), end()-n, end(), qcpLessThanSortKey<DataType>);
-  }
+    if (data.isEmpty())
+        return;
+    if (isEmpty()) {
+        set(data, alreadySorted);
+        return;
+    }
+
+    const int n = data.size();
+    const int oldSize = size();
+
+    if (alreadySorted && oldSize > 0 && !qcpLessThanSortKey<DataType>(*constBegin(), *(data.constEnd() - 1))) { // prepend if new data is sorted and keys are all smaller than or equal to existing ones
+        if (mPreallocSize < n)
+            preallocateGrow(n);
+        mPreallocSize -= n;
+        std::copy(data.constBegin(), data.constEnd(), begin());
+    } else { // don't need to prepend, so append and then sort and merge if necessary
+        mData.resize(mData.size()+n);
+        std::copy(data.constBegin(), data.constEnd(), end()-n);
+        if (!alreadySorted) // sort appended subrange if it wasn't already sorted
+          std::sort(end()-n, end(), qcpLessThanSortKey<DataType>);
+        if (oldSize > 0 && !qcpLessThanSortKey<DataType>(*(constEnd()-n-1), *(constEnd()-n))) // if appended range keys aren't all greater than existing ones, merge the two partitions
+          std::inplace_merge(begin(), end()-n, end(), qcpLessThanSortKey<DataType>);
+    }
 }
 
 /*! \overload
@@ -2904,20 +2901,17 @@ void QCPDataContainer<DataType>::add(const QVector<DataType> &data, bool already
 template <class DataType>
 void QCPDataContainer<DataType>::add(const DataType &data)
 {
-  if (isEmpty() || !qcpLessThanSortKey<DataType>(data, *(constEnd()-1))) // quickly handle appends if new data key is greater or equal to existing ones
-  {
-    mData.append(data);
-  } else if (qcpLessThanSortKey<DataType>(data, *constBegin()))  // quickly handle prepends using preallocated space
-  {
-    if (mPreallocSize < 1)
-      preallocateGrow(1);
-    --mPreallocSize;
-    *begin() = data;
-  } else // handle inserts, maintaining sorted keys
-  {
-    QCPDataContainer<DataType>::iterator insertionPoint = std::lower_bound(begin(), end(), data, qcpLessThanSortKey<DataType>);
-    mData.insert(insertionPoint, data);
-  }
+    if (isEmpty() || !qcpLessThanSortKey<DataType>(data, *(constEnd() - 1))) { // quickly handle appends if new data key is greater or equal to existing ones
+        mData.append(data);
+    } else if (qcpLessThanSortKey<DataType>(data, *constBegin())) { // quickly handle prepends using preallocated space
+        if (mPreallocSize < 1)
+            preallocateGrow(1);
+        --mPreallocSize;
+        *begin() = data;
+    } else { // handle inserts, maintaining sorted keys
+        QCPDataContainer<DataType>::iterator insertionPoint = std::lower_bound(begin(), end(), data, qcpLessThanSortKey<DataType>);
+        mData.insert(insertionPoint, data);
+    }
 }
 
 /*!

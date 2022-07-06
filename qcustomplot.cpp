@@ -1,4 +1,4 @@
-/***************************************************************************
+﻿/***************************************************************************
 **                                                                        **
 **  QCustomPlot, an easy to use, modern plotting widget for Qt            **
 **  Copyright (C) 2011-2021 Emanuel Eichhammer                            **
@@ -21670,82 +21670,76 @@ void QCPGraph::drawImpulsePlot(QCPPainter *painter, const QVector<QPointF> &line
 */
 void QCPGraph::getOptimizedLineData(QVector<QCPGraphData> *lineData, const QCPGraphDataContainer::const_iterator &begin, const QCPGraphDataContainer::const_iterator &end) const
 {
-  if (!lineData) return;
-  QCPAxis *keyAxis = mKeyAxis.data();
-  QCPAxis *valueAxis = mValueAxis.data();
-  if (!keyAxis || !valueAxis) { qDebug() << Q_FUNC_INFO << "invalid key or value axis"; return; }
-  if (begin == end) return;
-  
-  int dataCount = int(end-begin);
-  int maxCount = (std::numeric_limits<int>::max)();
-  if (mAdaptiveSampling)
-  {
-    double keyPixelSpan = qAbs(keyAxis->coordToPixel(begin->key)-keyAxis->coordToPixel((end-1)->key));
-    if (2*keyPixelSpan+2 < static_cast<double>((std::numeric_limits<int>::max)()))
-      maxCount = int(2*keyPixelSpan+2);
-  }
-  
-  {
-    QCPGraphDataContainer::const_iterator it = begin;
-    double minValue = it->value;
-    double maxValue = it->value;
-    QCPGraphDataContainer::const_iterator currentIntervalFirstPoint = it;
-    int reversedFactor = keyAxis->pixelOrientation(); // is used to calculate keyEpsilon pixel into the correct direction
-    int reversedRound = reversedFactor==-1 ? 1 : 0; // is used to switch between floor (normal) and ceil (reversed) rounding of currentIntervalStartKey
-    double currentIntervalStartKey = keyAxis->pixelToCoord(int(keyAxis->coordToPixel(begin->key)+reversedRound));
-    double lastIntervalEndKey = currentIntervalStartKey;
-    double keyEpsilon = qAbs(currentIntervalStartKey-keyAxis->pixelToCoord(keyAxis->coordToPixel(currentIntervalStartKey)+1.0*reversedFactor)); // interval of one pixel on screen when mapped to plot key coordinates
-    bool keyEpsilonVariable = keyAxis->scaleType() == QCPAxis::stLogarithmic; // indicates whether keyEpsilon needs to be updated after every interval (for log axes)
-    int intervalDataCount = 1;
-    ++it; // advance iterator to second data point because adaptive sampling works in 1 point retrospect
-    while (it != end)
-    {
-      if (it->key < currentIntervalStartKey+keyEpsilon) // data point is still within same pixel, so skip it and expand value span of this cluster if necessary
-      {
-        if (it->value < minValue)
-          minValue = it->value;
-        else if (it->value > maxValue)
-          maxValue = it->value;
-        ++intervalDataCount;
-      } else // new pixel interval started
-      {
-        if (intervalDataCount >= 2) // last pixel had multiple data points, consolidate them to a cluster
-        {
-          if (lastIntervalEndKey < currentIntervalStartKey-keyEpsilon) // last point is further away, so first point of this cluster must be at a real data point
-            lineData->append(QCPGraphData(currentIntervalStartKey+keyEpsilon*0.2, currentIntervalFirstPoint->value));
-          lineData->append(QCPGraphData(currentIntervalStartKey+keyEpsilon*0.25, minValue));
-          lineData->append(QCPGraphData(currentIntervalStartKey+keyEpsilon*0.75, maxValue));
-          if (it->key > currentIntervalStartKey+keyEpsilon*2) // new pixel started further away from previous cluster, so make sure the last point of the cluster is at a real data point
-            lineData->append(QCPGraphData(currentIntervalStartKey+keyEpsilon*0.8, (it-1)->value));
-        } else
-          lineData->append(QCPGraphData(currentIntervalFirstPoint->key, currentIntervalFirstPoint->value));
-        lastIntervalEndKey = (it-1)->key;
-        minValue = it->value;
-        maxValue = it->value;
-        currentIntervalFirstPoint = it;
-        currentIntervalStartKey = keyAxis->pixelToCoord(int(keyAxis->coordToPixel(it->key)+reversedRound));
-        if (keyEpsilonVariable)
-          keyEpsilon = qAbs(currentIntervalStartKey-keyAxis->pixelToCoord(keyAxis->coordToPixel(currentIntervalStartKey)+1.0*reversedFactor));
-        intervalDataCount = 1;
-      }
-      ++it;
-    if (mAdaptiveSampling && dataCount >= qMin(maxCount, mMaxCount)) // use adaptive sampling only if there are at least two points per pixel on average
+    if (!lineData) return;
+    QCPAxis *keyAxis = mKeyAxis.data();
+    QCPAxis *valueAxis = mValueAxis.data();
+    if (!keyAxis || !valueAxis) { qDebug() << Q_FUNC_INFO << "invalid key or value axis"; return; }
+    if (begin == end) return;
+
+    int dataCount = int(end - begin);
+    int maxCount = (std::numeric_limits<int>::max)();
+    if (mAdaptiveSampling) {
+        double keyPixelSpan = qAbs(keyAxis->coordToPixel(begin->key) - keyAxis->coordToPixel((end - 1)->key));
+        if (2 * keyPixelSpan + 2 < static_cast<double>((std::numeric_limits<int>::max)()))
+            maxCount = int(2 * keyPixelSpan + 2);
     }
-    // handle last interval:
-    if (intervalDataCount >= 2) // last pixel had multiple data points, consolidate them to a cluster
-    {
-      if (lastIntervalEndKey < currentIntervalStartKey-keyEpsilon) // last point wasn't a cluster, so first point of this cluster must be at a real data point
-        lineData->append(QCPGraphData(currentIntervalStartKey+keyEpsilon*0.2, currentIntervalFirstPoint->value));
-      lineData->append(QCPGraphData(currentIntervalStartKey+keyEpsilon*0.25, minValue));
-      lineData->append(QCPGraphData(currentIntervalStartKey+keyEpsilon*0.75, maxValue));
-    } else
-      lineData->append(QCPGraphData(currentIntervalFirstPoint->key, currentIntervalFirstPoint->value));
-    
-  } else // don't use adaptive sampling algorithm, transfer points one-to-one from the data container into the output
-  {
-    lineData->resize(dataCount);
-    std::copy(begin, end, lineData->begin());
-  }
+
+    if (mAdaptiveSampling && dataCount >= qMin(maxCount, mMaxCount)) { // use adaptive sampling only if there are at least two points per pixel on average
+        QCPGraphDataContainer::const_iterator it = begin;
+        double minValue = it->value;
+        double maxValue = it->value;
+        QCPGraphDataContainer::const_iterator currentIntervalFirstPoint = it;
+        int reversedFactor = keyAxis->pixelOrientation(); // is used to calculate keyEpsilon pixel into the correct direction
+        int reversedRound = reversedFactor == -1 ? 1 : 0; // is used to switch between floor (normal) and ceil (reversed) rounding of currentIntervalStartKey
+        double currentIntervalStartKey = keyAxis->pixelToCoord(int(keyAxis->coordToPixel(begin->key) + reversedRound));
+        double lastIntervalEndKey = currentIntervalStartKey;
+        double keyEpsilon = qAbs(currentIntervalStartKey - keyAxis->pixelToCoord(keyAxis->coordToPixel(currentIntervalStartKey) + 1.0 * reversedFactor)); // interval of one pixel on screen when mapped to plot key coordinates
+        bool keyEpsilonVariable = keyAxis->scaleType() == QCPAxis::stLogarithmic; // indicates whether keyEpsilon needs to be updated after every interval (for log axes)
+        int intervalDataCount = 1;
+        ++it; // advance iterator to second data point because adaptive sampling works in 1 point retrospect
+        while (it != end) {
+            if (it->key < currentIntervalStartKey + keyEpsilon) { // data point is still within same pixel, so skip it and expand value span of this cluster if necessary
+                if (it->value < minValue)
+                    minValue = it->value;
+                else if (it->value > maxValue)
+                    maxValue = it->value;
+
+                ++intervalDataCount;
+            } else { // new pixel interval started
+                if (intervalDataCount >= 2) { // last pixel had multiple data points, consolidate them to a cluster
+                    if (lastIntervalEndKey < currentIntervalStartKey - keyEpsilon) // last point is further away, so first point of this cluster must be at a real data point
+                        lineData->append(QCPGraphData(currentIntervalStartKey + keyEpsilon * 0.2, currentIntervalFirstPoint->value));
+                    lineData->append(QCPGraphData(currentIntervalStartKey + keyEpsilon * 0.25, minValue));
+                    lineData->append(QCPGraphData(currentIntervalStartKey + keyEpsilon * 0.75, maxValue));
+                    if (it->key > currentIntervalStartKey + keyEpsilon * 2) // new pixel started further away from previous cluster, so make sure the last point of the cluster is at a real data point
+                        lineData->append(QCPGraphData(currentIntervalStartKey + keyEpsilon * 0.8, (it - 1)->value));
+                } else {
+                    lineData->append(QCPGraphData(currentIntervalFirstPoint->key, currentIntervalFirstPoint->value));
+                }
+                lastIntervalEndKey = (it - 1)->key;
+                minValue = it->value;
+                maxValue = it->value;
+                currentIntervalFirstPoint = it;
+                currentIntervalStartKey = keyAxis->pixelToCoord(int(keyAxis->coordToPixel(it->key) + reversedRound));
+                if (keyEpsilonVariable)
+                    keyEpsilon = qAbs(currentIntervalStartKey - keyAxis->pixelToCoord(keyAxis->coordToPixel(currentIntervalStartKey) + 1.0 * reversedFactor));
+                intervalDataCount = 1;
+            }
+            ++it;
+        }
+        // handle last interval:
+        if (intervalDataCount >= 2) { // last pixel had multiple data points, consolidate them to a cluster
+            if (lastIntervalEndKey < currentIntervalStartKey - keyEpsilon) // last point wasn't a cluster, so first point of this cluster must be at a real data point
+                lineData->append(QCPGraphData(currentIntervalStartKey + keyEpsilon * 0.2, currentIntervalFirstPoint->value));
+            lineData->append(QCPGraphData(currentIntervalStartKey + keyEpsilon * 0.25, minValue));
+            lineData->append(QCPGraphData(currentIntervalStartKey + keyEpsilon * 0.75, maxValue));
+        } else {
+            lineData->append(QCPGraphData(currentIntervalFirstPoint->key, currentIntervalFirstPoint->value));
+        }
+    } else { // don't use adaptive sampling algorithm, transfer points one-to-one from the data container into the output
+        lineData->resize(dataCount);
+        std::copy(begin, end, lineData->begin());
+    }
 }
 
 /*! \internal
