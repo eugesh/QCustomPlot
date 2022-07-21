@@ -1944,6 +1944,11 @@ QCPRange::QCPRange(double lower, double upper) :
   normalize();
 }
 
+void QCPRange::normalize() {
+    if (lower > upper)
+        qSwap(lower, upper);
+}
+
 /*! \overload
 
   Expands this range such that \a otherRange is contained in the new range. It is assumed that both
@@ -21019,12 +21024,6 @@ void QCPGraph::setAdaptiveSampling(bool enabled)
   mAdaptiveSampling = enabled;
 }
 
-void QCPGraph::setMaxCount(int count)
-{
-    mMaxCount = count;
-}
-
-
 /*! \overload
   
   Adds the provided points in \a keys and \a values to the current data. The provided vectors
@@ -21066,9 +21065,9 @@ void QCPGraph::addData(const QVector<double> &keys, const QVector<double> &value
 void QCPGraph::addData(double key, double value)
 {
     mDataContainer->add(QCPGraphData(key, value));
-    while (dataCount() > mMaxCount) {
+    while (mMaxCount && dataCount() > mMaxCount) {
         // mDataContainer->begin() = mDataContainer->begin()++;
-        mDataContainer->removeBefore(mDataContainer->at(1)->key);
+        mDataContainer->removeBefore(mDataContainer->at(1)->key, mMaxCount);
     }
 }
 
@@ -22810,6 +22809,11 @@ void QCPCurve::addData(const QVector<double> &keys, const QVector<double> &value
 void QCPCurve::addData(double t, double key, double value)
 {
   mDataContainer->add(QCPCurveData(t, key, value));
+
+  while (mMaxCount && dataCount() > mMaxCount) {
+      // mDataContainer->begin() = mDataContainer->begin()++;
+      mDataContainer->removeBefore(mDataContainer->at(1)->t, mMaxCount);
+  }
 }
 
 /*! \overload

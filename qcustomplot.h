@@ -817,7 +817,7 @@ public:
   
   double size() const { return upper-lower; }
   double center() const { return (upper+lower)*0.5; }
-  void normalize() { if (lower > upper) qSwap(lower, upper); }
+  void normalize(); // { if (lower > upper) qSwap(lower, upper); }
   void expand(const QCPRange &otherRange);
   void expand(double includeCoord);
   QCPRange expanded(const QCPRange &otherRange) const;
@@ -2584,7 +2584,7 @@ public:
   QCPDataContainer();
   
   // getters:
-  int size() const { return mData.size()-mPreallocSize; }
+  int size() const { return mData.size() - mPreallocSize; }
   bool isEmpty() const { return size() == 0; }
   bool autoSqueeze() const { return mAutoSqueeze; }
   
@@ -2597,7 +2597,7 @@ public:
   void add(const QCPDataContainer<DataType> &data);
   void add(const QVector<DataType> &data, bool alreadySorted=false);
   void add(const DataType &data);
-  void removeBefore(double sortKey);
+  void removeBefore(double sortKey, bool forceRemove = false);
   void removeAfter(double sortKey);
   void remove(double sortKeyFrom, double sortKeyTo);
   void remove(double sortKey);
@@ -2920,11 +2920,15 @@ void QCPDataContainer<DataType>::add(const DataType &data)
   \see removeAfter, remove, clear
 */
 template <class DataType>
-void QCPDataContainer<DataType>::removeBefore(double sortKey)
+void QCPDataContainer<DataType>::removeBefore(double sortKey, bool forceRemove)
 {
   QCPDataContainer<DataType>::iterator it = begin();
   QCPDataContainer<DataType>::iterator itEnd = std::lower_bound(begin(), end(), DataType::fromSortKey(sortKey), qcpLessThanSortKey<DataType>);
   mPreallocSize += int(itEnd-it); // don't actually delete, just add it to the preallocated block (if it gets too large, squeeze will take care of it)
+
+  if (forceRemove)
+    mData.pop_front(); // eugesh: Forcely remove data to support ring buffer
+
   if (mAutoSqueeze)
     performAutoSqueeze();
 }
@@ -4155,10 +4159,12 @@ public:
   // reimplemented virtual methods:
   virtual double selectTest(const QPointF &pos, bool onlySelectable, QVariant *details=nullptr) const Q_DECL_OVERRIDE;
   virtual QCPPlottableInterface1D *interface1D() Q_DECL_OVERRIDE { return this; }
+  virtual void setMaxCount(int count);
   
 protected:
   // property members:
   QSharedPointer<QCPDataContainer<DataType> > mDataContainer;
+  int mMaxCount = 0;
   
   // helpers for subclasses:
   void getDataSegments(QList<QCPDataRange> &selectedSegments, QList<QCPDataRange> &unselectedSegments) const;
@@ -4537,6 +4543,12 @@ template <class DataType>
 int QCPAbstractPlottable1D<DataType>::findEnd(double sortKey, bool expandedRange) const
 {
   return int(mDataContainer->findEnd(sortKey, expandedRange)-mDataContainer->constBegin());
+}
+
+template <class DataType>
+void QCPAbstractPlottable1D<DataType>::setMaxCount(int count)
+{
+    mMaxCount = count;
 }
 
 /*!
@@ -5493,7 +5505,6 @@ public:
   void setScatterSkip(int skip);
   void setChannelFillGraph(QCPGraph *targetGraph);
   void setAdaptiveSampling(bool enabled);
-  void setMaxCount(int count);
   
   // non-property methods:
   void addData(const QVector<double> &keys, const QVector<double> &values, bool alreadySorted=false);
@@ -5511,7 +5522,6 @@ protected:
   int mScatterSkip;
   QPointer<QCPGraph> mChannelFillGraph;
   bool mAdaptiveSampling;
-  int mMaxCount;
   
   // reimplemented virtual methods:
   virtual void draw(QCPPainter *painter) Q_DECL_OVERRIDE;
