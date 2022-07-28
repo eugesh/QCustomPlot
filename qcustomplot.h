@@ -6026,6 +6026,8 @@ public:
   bool isEmpty() const { return mIsEmpty; }
   void coordToCell(double key, double value, int *keyIndex, int *valueIndex) const;
   void cellToCoord(int keyIndex, int valueIndex, double *key, double *value) const;
+  void removeRow(int row, int dir = 1);
+  void removeColumn(int col, int dir = 1);
   
 protected:
   // property members:

@@ -26250,6 +26250,38 @@ void QCPColorMapData::cellToCoord(int keyIndex, int valueIndex, double *key, dou
     *value = valueIndex/double(mValueSize-1)*(mValueRange.upper-mValueRange.lower)+mValueRange.lower;
 }
 
+/**
+ * @brief QCPColorMapData::removeRow copies data sequentially
+ * @param row row number since which displacement performs
+ * @param dir 1 or -1 (top to bottom or backward)
+ */
+void QCPColorMapData::removeRow(int row, int dir)
+{
+    // Copy
+
+}
+
+/**
+ * @brief QCPColorMapData::removeColumn
+ * @param col column number since which displacement performs
+ * @param dir 1 or -1 (left to right or backward)
+ */
+void QCPColorMapData::removeColumn(int col, int dir)
+{
+    int W = keySize();
+    int H = valueSize();
+
+    if (dir > 0) {
+        for (int j = col; j < W - 1; j++) {
+            for (int i = 0; i < H; ++i) {
+                mData[i * W + j] = mData[i * W + j + 1];
+            }
+        }
+    } else {
+        // The same but from right to left
+    }
+}
+
 /*! \internal
 
   Allocates the internal alpha map with the current data map key/value size and, if \a
