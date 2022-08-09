@@ -2220,6 +2220,7 @@ public:
   QCPLineEnding lowerEnding() const;
   QCPLineEnding upperEnding() const;
   QCPGrid *grid() const { return mGrid; }
+  int margin() const;
   
   // setters:
   Q_SLOT void setScaleType(QCPAxis::ScaleType type);

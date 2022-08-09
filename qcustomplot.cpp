@@ -8353,6 +8353,11 @@ QCPLineEnding QCPAxis::upperEnding() const
   return mAxisPainter->upperEnding;
 }
 
+int QCPAxis::margin() const
+{
+    return mCachedMargin;
+}
+
 /*!
   Sets whether the axis uses a linear scale or a logarithmic scale.
   
