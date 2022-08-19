@@ -1944,6 +1944,11 @@ QCPRange::QCPRange(double lower, double upper) :
   normalize();
 }
 
+void QCPRange::normalize() {
+    if (lower > upper)
+        qSwap(lower, upper);
+}
+
 /*! \overload
 
   Expands this range such that \a otherRange is contained in the new range. It is assumed that both
@@ -8346,6 +8351,11 @@ QCPLineEnding QCPAxis::lowerEnding() const
 QCPLineEnding QCPAxis::upperEnding() const
 {
   return mAxisPainter->upperEnding;
+}
+
+int QCPAxis::margin() const
+{
+    return mCachedMargin;
 }
 
 /*!
@@ -21019,12 +21029,6 @@ void QCPGraph::setAdaptiveSampling(bool enabled)
   mAdaptiveSampling = enabled;
 }
 
-void QCPGraph::setMaxCount(int count)
-{
-    mMaxCount = count;
-}
-
-
 /*! \overload
   
   Adds the provided points in \a keys and \a values to the current data. The provided vectors
@@ -21066,9 +21070,9 @@ void QCPGraph::addData(const QVector<double> &keys, const QVector<double> &value
 void QCPGraph::addData(double key, double value)
 {
     mDataContainer->add(QCPGraphData(key, value));
-    while (dataCount() > mMaxCount) {
+    while (mMaxCount && dataCount() > mMaxCount) {
         // mDataContainer->begin() = mDataContainer->begin()++;
-        mDataContainer->removeBefore(mDataContainer->at(1)->key);
+        mDataContainer->removeBefore(mDataContainer->at(1)->key, mMaxCount);
     }
 }
 
@@ -22810,6 +22814,11 @@ void QCPCurve::addData(const QVector<double> &keys, const QVector<double> &value
 void QCPCurve::addData(double t, double key, double value)
 {
   mDataContainer->add(QCPCurveData(t, key, value));
+
+  while (mMaxCount && dataCount() > mMaxCount) {
+      // mDataContainer->begin() = mDataContainer->begin()++;
+      mDataContainer->removeBefore(mDataContainer->at(1)->t, mMaxCount);
+  }
 }
 
 /*! \overload
@@ -26244,6 +26253,38 @@ void QCPColorMapData::cellToCoord(int keyIndex, int valueIndex, double *key, dou
     *key = keyIndex/double(mKeySize-1)*(mKeyRange.upper-mKeyRange.lower)+mKeyRange.lower;
   if (value)
     *value = valueIndex/double(mValueSize-1)*(mValueRange.upper-mValueRange.lower)+mValueRange.lower;
+}
+
+/**
+ * @brief QCPColorMapData::removeRow copies data sequentially
+ * @param row row number since which displacement performs
+ * @param dir 1 or -1 (top to bottom or backward)
+ */
+void QCPColorMapData::removeRow(int row, int dir)
+{
+    // Copy
+
+}
+
+/**
+ * @brief QCPColorMapData::removeColumn
+ * @param col column number since which displacement performs
+ * @param dir 1 or -1 (left to right or backward)
+ */
+void QCPColorMapData::removeColumn(int col, int dir)
+{
+    int W = keySize();
+    int H = valueSize();
+
+    if (dir > 0) {
+        for (int j = col; j < W - 1; j++) {
+            for (int i = 0; i < H; ++i) {
+                mData[i * W + j] = mData[i * W + j + 1];
+            }
+        }
+    } else {
+        // The same but from right to left
+    }
 }
 
 /*! \internal
