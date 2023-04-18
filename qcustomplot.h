@@ -4161,6 +4161,7 @@ public:
   virtual double selectTest(const QPointF &pos, bool onlySelectable, QVariant *details=nullptr) const Q_DECL_OVERRIDE;
   virtual QCPPlottableInterface1D *interface1D() Q_DECL_OVERRIDE { return this; }
   virtual void setMaxCount(int count);
+  void clear();
   
 protected:
   // property members:
@@ -4550,6 +4551,14 @@ template <class DataType>
 void QCPAbstractPlottable1D<DataType>::setMaxCount(int count)
 {
     mMaxCount = count;
+}
+
+template <class DataType>
+void QCPAbstractPlottable1D<DataType>::clear()
+{
+    if (!mDataContainer.isNull())
+        if (!mDataContainer->isEmpty())
+            mDataContainer->clear();
 }
 
 /*!
@@ -6037,7 +6046,7 @@ protected:
   bool mIsEmpty;
   
   // non-property members:
-  double *mData;
+  double *mData = nullptr;
   unsigned char *mAlpha;
   QCPRange mDataBounds;
   bool mDataModified;

@@ -25939,7 +25939,10 @@ void QCPColorMapData::setSize(int keySize, int valueSize)
   {
     mKeySize = keySize;
     mValueSize = valueSize;
-    delete[] mData;
+    if (mData) {
+        delete[] mData;
+        mData = nullptr;
+    }
     mIsEmpty = mKeySize == 0 || mValueSize == 0;
     if (!mIsEmpty)
     {
