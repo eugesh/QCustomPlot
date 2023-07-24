@@ -25954,7 +25954,7 @@ void QCPColorMapData::setSize(int keySize, int valueSize)
       } catch (...) { mData = nullptr; }
 #endif
       if (mData)
-        fill(0);
+        fill(NAN);
       else
         qDebug() << Q_FUNC_INFO << "out of memory for data dimensions "<< mKeySize << "*" << mValueSize;
     } else
