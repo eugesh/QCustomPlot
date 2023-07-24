@@ -24,6 +24,7 @@
 ****************************************************************************/
 
 #include "qcustomplot.h"
+#include <math.h>
 
 
 /* including file 'src/vector2d.cpp'       */
@@ -25954,7 +25955,7 @@ void QCPColorMapData::setSize(int keySize, int valueSize)
       } catch (...) { mData = nullptr; }
 #endif
       if (mData)
-        fill(0);
+        fill(NAN);
       else
         qDebug() << Q_FUNC_INFO << "out of memory for data dimensions "<< mKeySize << "*" << mValueSize;
     } else
@@ -26186,7 +26187,10 @@ void QCPColorMapData::fill(double z)
   const int dataCount = mValueSize*mKeySize;
   for (int i=0; i<dataCount; ++i)
     mData[i] = z;
-  mDataBounds = QCPRange(z, z);
+  if (isnan(z))
+    mDataBounds = QCPRange(0, 0);
+  else
+    mDataBounds = QCPRange(z, z);
   mDataModified = true;
 }
 
