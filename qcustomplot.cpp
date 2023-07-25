@@ -25,6 +25,7 @@
 
 #include "qcustomplot.h"
 #include <math.h>
+#include <QtCore>
 
 
 /* including file 'src/vector2d.cpp'       */
@@ -5588,7 +5589,7 @@ void QCPLabelPainterPrivate::drawTickLabel(QCPPainter *painter, const QPointF &t
   } else if (mAnchorMode == amSkewedRotated) // in this mode every label is individually rotated to match circle tangent
   {
     realSide = skewedAnchorSide(tickPos, 0, 0);
-    realRotation += QCPVector2D(tickPos-mAnchorReference).angle()/M_PI*180.0;
+    realRotation += qRadiansToDegrees(QCPVector2D(tickPos-mAnchorReference).angle()); // /M_PI*180.0;
     if (realRotation > 90) realRotation -= 180;
     else if (realRotation < -90) realRotation += 180;
   }
@@ -10445,7 +10446,7 @@ QPointF QCPAxisPainterPrivate::getTickLabelDrawOffset(const TickLabelData &label
   */
   bool doRotation = !qFuzzyIsNull(tickLabelRotation);
   bool flip = qFuzzyCompare(qAbs(tickLabelRotation), 90.0); // perfect +/-90 degree flip. Indicates vertical label centering on vertical axes.
-  double radians = tickLabelRotation/180.0*M_PI;
+  double radians = qDegreesToRadians(tickLabelRotation);// /180.0*M_PI;
   double x = 0;
   double y = 0;
   if ((type == QCPAxis::atLeft && tickLabelSide == QCPAxis::lsOutside) || (type == QCPAxis::atRight && tickLabelSide == QCPAxis::lsInside)) // Anchor at right side of tick label
@@ -17323,14 +17324,14 @@ void QCPSelectionDecoratorBracket::drawDecoration(QCPPainter *painter, QCPDataSe
       painter->setPen(mBracketPen);
       painter->setBrush(mBracketBrush);
       painter->translate(openBracketPos);
-      painter->rotate(openBracketAngle/M_PI*180.0);
+      painter->rotate(qRadiansToDegrees(openBracketAngle)); // /M_PI*180.0);
       drawBracket(painter, openBracketDir);
       painter->setTransform(oldTransform);
       // draw closing bracket:
       painter->setPen(mBracketPen);
       painter->setBrush(mBracketBrush);
       painter->translate(closeBracketPos);
-      painter->rotate(closeBracketAngle/M_PI*180.0);
+      painter->rotate(qRadiansToDegrees(closeBracketAngle)); // /M_PI*180.0);
       drawBracket(painter, closeBracketDir);
       painter->setTransform(oldTransform);
     }
@@ -29431,9 +29432,9 @@ void QCPItemCurve::draw(QCPPainter *painter)
     painter->drawPath(cubicPath);
     painter->setBrush(Qt::SolidPattern);
     if (mTail.style() != QCPLineEnding::esNone)
-      mTail.draw(painter, startVec, M_PI-cubicPath.angleAtPercent(0)/180.0*M_PI);
+      mTail.draw(painter, startVec, M_PI-qDegreesToRadians(cubicPath.angleAtPercent(0))); // /180.0*M_PI);
     if (mHead.style() != QCPLineEnding::esNone)
-      mHead.draw(painter, endVec, -cubicPath.angleAtPercent(1)/180.0*M_PI);
+      mHead.draw(painter, endVec, -qDegreesToRadians(cubicPath.angleAtPercent(1))); // /180.0*M_PI);
   }
 }
 
@@ -32347,7 +32348,7 @@ void QCPPolarAxisRadial::applyDefaultAntialiasingHint(QCPPainter *painter) const
 */
 void QCPPolarAxisRadial::draw(QCPPainter *painter)
 {
-  const double axisAngleRad = (mAngle+(mAngleReference==arAngularAxis ? mAngularAxis->angle() : 0))/180.0*M_PI;
+  const double axisAngleRad = qDegreesToRadians(mAngle+(mAngleReference==arAngularAxis ? mAngularAxis->angle() : 0)); // /180.0*M_PI;
   const QPointF axisVector(qCos(axisAngleRad), qSin(axisAngleRad)); // semantically should be QCPVector2D, but we save time in loops when we keep it as QPointF
   const QPointF tickNormal = QCPVector2D(axisVector).perpendicular().toPointF(); // semantically should be QCPVector2D, but we save time in loops when we keep it as QPointF
   
@@ -32599,7 +32600,7 @@ QCPPolarAxisAngular::QCPPolarAxisAngular(QCustomPlot *parentPlot) :
   mRangeZoomFactor(0.85),
   // axis base:
   mAngle(-90),
-  mAngleRad(mAngle/180.0*M_PI),
+  mAngleRad(qDegreesToRadians(mAngle)), // /180.0*M_PI),
   mSelectableParts(spAxis | spTickLabels | spAxisLabel),
   mSelectedParts(spNone),
   mBasePen(QPen(Qt::black, 0, Qt::SolidLine, Qt::SquareCap)),
@@ -33107,7 +33108,7 @@ void QCPPolarAxisAngular::draw(QCPPainter *painter)
       // draw tick labels:
       if (!mTickVectorLabels.isEmpty())
       {
-        if (i < mTickVectorLabels.count()-1 || (mTickVectorCosSin.at(i)-mTickVectorCosSin.first()).manhattanLength() > 5/180.0*M_PI) // skip last label if it's closer than approx 5 degrees to first
+        if (i < mTickVectorLabels.count()-1 || (mTickVectorCosSin.at(i)-mTickVectorCosSin.first()).manhattanLength() > qDegreesToRadians(5.0)) // /180.0*M_PI) // skip last label if it's closer than approx 5 degrees to first
           mLabelPainter.drawTickLabel(painter, outerTick, mTickVectorLabels.at(i));
       }
     }
@@ -33377,7 +33378,7 @@ void QCPPolarAxisAngular::setRangeReversed(bool reversed)
 void QCPPolarAxisAngular::setAngle(double degrees)
 {
   mAngle = degrees;
-  mAngleRad = mAngle/180.0*M_PI;
+  mAngleRad = qDegreesToRadians(mAngle); // /180.0*M_PI;
 }
 
 /*!
