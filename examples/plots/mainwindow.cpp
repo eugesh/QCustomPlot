@@ -174,7 +174,7 @@ void MainWindow::setupSimpleDemo(QCustomPlot *customPlot)
   customPlot->graph(1)->rescaleAxes(true);
   // Note: we could have also just called customPlot->rescaleAxes(); instead
   // Allow user to drag axis ranges with mouse, zoom with mouse wheel and select graphs by clicking:
-  customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+  customPlot->setInteractions(Q_CP::iRangeDrag | Q_CP::iRangeZoom | Q_CP::iSelectPlottables);
 }
 
 void MainWindow::setupSincScatterDemo(QCustomPlot *customPlot)
@@ -511,7 +511,7 @@ void MainWindow::setupTextureBrushDemo(QCustomPlot *customPlot)
 
 void MainWindow::setupMultiAxisDemo(QCustomPlot *customPlot)
 {
-  customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+  customPlot->setInteractions(Q_CP::iRangeDrag | Q_CP::iRangeZoom);
   demoName = "Multi Axis Demo";
   
   customPlot->setLocale(QLocale(QLocale::English, QLocale::UnitedKingdom)); // period as decimal separator and comma as thousand separator
@@ -694,7 +694,7 @@ void MainWindow::setupLogarithmicDemo(QCustomPlot *customPlot)
   customPlot->xAxis->setRange(0, 19.9);
   customPlot->yAxis->setRange(1e-2, 1e10);
   // make range draggable and zoomable:
-  customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+  customPlot->setInteractions(Q_CP::iRangeDrag | Q_CP::iRangeZoom);
   
   // make top right axes clones of bottom left axes:
   customPlot->axisRect()->setupFullAxesBox();
@@ -775,7 +775,7 @@ void MainWindow::setupParametricCurveDemo(QCustomPlot *customPlot)
   deltoidRadial->setPen(QPen(QColor(170, 20, 240)));
   deltoidRadial->setBrush(QBrush(radialGrad));
   // set some basic customPlot config:
-  customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+  customPlot->setInteractions(Q_CP::iRangeDrag | Q_CP::iRangeZoom | Q_CP::iSelectPlottables);
   customPlot->axisRect()->setupFullAxesBox();
   customPlot->rescaleAxes();
 }
@@ -863,7 +863,7 @@ void MainWindow::setupBarChartDemo(QCustomPlot *customPlot)
   QFont legendFont = font();
   legendFont.setPointSize(10);
   customPlot->legend->setFont(legendFont);
-  customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+  customPlot->setInteractions(Q_CP::iRangeDrag | Q_CP::iRangeZoom);
 }
 
 void MainWindow::setupStatisticalDemo(QCustomPlot *customPlot)
@@ -894,13 +894,13 @@ void MainWindow::setupStatisticalDemo(QCustomPlot *customPlot)
   customPlot->rescaleAxes();
   customPlot->xAxis->scaleRange(1.7, customPlot->xAxis->range().center());
   customPlot->yAxis->setRange(0, 7);
-  customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+  customPlot->setInteractions(Q_CP::iRangeDrag | Q_CP::iRangeZoom);
 }
 
 void MainWindow::setupSimpleItemDemo(QCustomPlot *customPlot)
 {
   demoName = "Simple Item Demo";
-  customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+  customPlot->setInteractions(Q_CP::iRangeDrag | Q_CP::iRangeZoom);
   
   // add the text label at the top:
   QCPItemText *textLabel = new QCPItemText(customPlot);
@@ -922,7 +922,7 @@ void MainWindow::setupItemDemo(QCustomPlot *customPlot)
 {
   demoName = "Item Demo";
   
-  customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+  customPlot->setInteractions(Q_CP::iRangeDrag | Q_CP::iRangeZoom);
   QCPGraph *graph = customPlot->addGraph();
   int n = 500;
   double phase = 0;
@@ -1165,9 +1165,9 @@ void MainWindow::setupAdvancedAxesDemo(QCustomPlot *customPlot)
   subRectLeft->axis(QCPAxis::atBottom)->grid()->setVisible(true);
   // synchronize the left and right margins of the top and bottom axis rects:
   QCPMarginGroup *marginGroup = new QCPMarginGroup(customPlot);
-  subRectLeft->setMarginGroup(QCP::msLeft, marginGroup);
-  subRectRight->setMarginGroup(QCP::msRight, marginGroup);
-  wideAxisRect->setMarginGroup(QCP::msLeft | QCP::msRight, marginGroup);
+  subRectLeft->setMarginGroup(Q_CP::msLeft, marginGroup);
+  subRectRight->setMarginGroup(Q_CP::msRight, marginGroup);
+  wideAxisRect->setMarginGroup(Q_CP::msLeft | Q_CP::msRight, marginGroup);
   // move newly created axes on "axes" layer and grids on "grid" layer:
   foreach (QCPAxisRect *rect, customPlot->axisRects())
   {
@@ -1243,7 +1243,7 @@ void MainWindow::setupColorMapDemo(QCustomPlot *customPlot)
   demoName = "Color Map Demo";
   
   // configure axis rect:
-  customPlot->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom); // this will also allow rescaling the color scale by dragging/zooming
+  customPlot->setInteractions(Q_CP::iRangeDrag|Q_CP::iRangeZoom); // this will also allow rescaling the color scale by dragging/zooming
   customPlot->axisRect()->setupFullAxesBox(true);
   customPlot->xAxis->setLabel("x");
   customPlot->yAxis->setLabel("y");
@@ -1284,8 +1284,8 @@ void MainWindow::setupColorMapDemo(QCustomPlot *customPlot)
   
   // make sure the axis rect and color scale synchronize their bottom and top margins (so they line up):
   QCPMarginGroup *marginGroup = new QCPMarginGroup(customPlot);
-  customPlot->axisRect()->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
-  colorScale->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
+  customPlot->axisRect()->setMarginGroup(Q_CP::msBottom|Q_CP::msTop, marginGroup);
+  colorScale->setMarginGroup(Q_CP::msBottom|Q_CP::msTop, marginGroup);
   
   // rescale the key (x) and value (y) axes so the whole color map is visible:
   customPlot->rescaleAxes();
@@ -1342,7 +1342,7 @@ void MainWindow::setupFinancialDemo(QCustomPlot *customPlot)
   volumeAxisRect->axis(QCPAxis::atBottom)->grid()->setLayer("grid");
   // bring bottom and main axis rect closer together:
   customPlot->plotLayout()->setRowSpacing(0);
-  volumeAxisRect->setAutoMargins(QCP::msLeft|QCP::msRight|QCP::msBottom);
+  volumeAxisRect->setAutoMargins(Q_CP::msLeft|Q_CP::msRight|Q_CP::msBottom);
   volumeAxisRect->setMargins(QMargins(0, 0, 0, 0));
   // create two bar plottables, for positive (green) and negative (red) volume bars:
   customPlot->setAutoAddPlottableToLegend(false);
@@ -1379,8 +1379,8 @@ void MainWindow::setupFinancialDemo(QCustomPlot *customPlot)
   
   // make axis rects' left side line up:
   QCPMarginGroup *group = new QCPMarginGroup(customPlot);
-  customPlot->axisRect()->setMarginGroup(QCP::msLeft|QCP::msRight, group);
-  volumeAxisRect->setMarginGroup(QCP::msLeft|QCP::msRight, group);
+  customPlot->axisRect()->setMarginGroup(Q_CP::msLeft|Q_CP::msRight, group);
+  volumeAxisRect->setMarginGroup(Q_CP::msLeft|Q_CP::msRight, group);
 }
 
 void MainWindow::setupPolarPlotDemo(QCustomPlot *customPlot)
@@ -1396,7 +1396,7 @@ void MainWindow::setupPolarPlotDemo(QCustomPlot *customPlot)
   ticker->setTickCount(8);
   polarAxis->setTicker(ticker);
   */
-  customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+  customPlot->setInteractions(Q_CP::iRangeDrag | Q_CP::iRangeZoom);
   angularAxis->setRangeDrag(false);
   angularAxis->setTickLabelMode(QCPPolarAxisAngular::lmUpright);
   

@@ -1597,7 +1597,7 @@ bool QCPLayerable::moveToLayer(QCPLayer *layer, bool prepend)
   QCustomPlot::setNotAntialiasedElements. Which override enum this function takes into account is
   controlled via \a overrideElement.
 */
-void QCPLayerable::applyAntialiasingHint(QCPPainter *painter, bool localAntialiased, QCP::AntialiasedElement overrideElement) const
+void QCPLayerable::applyAntialiasingHint(QCPPainter *painter, bool localAntialiased, Q_CP::AntialiasedElement overrideElement) const
 {
   if (mParentPlot && mParentPlot->notAntialiasedElements().testFlag(overrideElement))
     painter->setAntialiasing(false);
@@ -1639,9 +1639,9 @@ void QCPLayerable::parentPlotInitialized(QCustomPlot *parentPlot)
   
   \see QCustomPlot::setInteractions
 */
-QCP::Interaction QCPLayerable::selectionCategory() const
+Q_CP::Interaction QCPLayerable::selectionCategory() const
 {
-  return QCP::iSelectOther;
+  return Q_CP::iSelectOther;
 }
 
 /*! \internal
@@ -2641,22 +2641,22 @@ void QCPDataSelection::simplify()
   
   \see QCP::SelectionType
 */
-void QCPDataSelection::enforceType(QCP::SelectionType type)
+void QCPDataSelection::enforceType(Q_CP::SelectionType type)
 {
   simplify();
   switch (type)
   {
-    case QCP::stNone:
+    case Q_CP::stNone:
     {
       mDataRanges.clear();
       break;
     }
-    case QCP::stWhole:
+    case Q_CP::stWhole:
     {
       // whole selection isn't defined by data range, so don't change anything (is handled in plottable methods)
       break;
     }
-    case QCP::stSingleData:
+    case Q_CP::stSingleData:
     {
       // reduce all data ranges to the single first data point:
       if (!mDataRanges.isEmpty())
@@ -2668,13 +2668,13 @@ void QCPDataSelection::enforceType(QCP::SelectionType type)
       }
       break;
     }
-    case QCP::stDataRange:
+    case Q_CP::stDataRange:
     {
       if (!isEmpty())
         mDataRanges = QList<QCPDataRange>() << span();
       break;
     }
-    case QCP::stMultipleDataRanges:
+    case Q_CP::stMultipleDataRanges:
     {
       // this is the selection type that allows all concievable combinations of ranges, so do nothing
       break;
@@ -2973,7 +2973,7 @@ void QCPSelectionRect::keyPressEvent(QKeyEvent *event)
 /* inherits documentation from base class */
 void QCPSelectionRect::applyDefaultAntialiasingHint(QCPPainter *painter) const
 {
-  applyAntialiasingHint(painter, mAntialiased, QCP::aeOther);
+  applyAntialiasingHint(painter, mAntialiased, Q_CP::aeOther);
 }
 
 /*! \internal
@@ -3049,10 +3049,10 @@ QCPMarginGroup::QCPMarginGroup(QCustomPlot *parentPlot) :
   QObject(parentPlot),
   mParentPlot(parentPlot)
 {
-  mChildren.insert(QCP::msLeft, QList<QCPLayoutElement*>());
-  mChildren.insert(QCP::msRight, QList<QCPLayoutElement*>());
-  mChildren.insert(QCP::msTop, QList<QCPLayoutElement*>());
-  mChildren.insert(QCP::msBottom, QList<QCPLayoutElement*>());
+  mChildren.insert(Q_CP::msLeft, QList<QCPLayoutElement*>());
+  mChildren.insert(Q_CP::msRight, QList<QCPLayoutElement*>());
+  mChildren.insert(Q_CP::msTop, QList<QCPLayoutElement*>());
+  mChildren.insert(Q_CP::msBottom, QList<QCPLayoutElement*>());
 }
 
 QCPMarginGroup::~QCPMarginGroup()
@@ -3066,7 +3066,7 @@ QCPMarginGroup::~QCPMarginGroup()
 */
 bool QCPMarginGroup::isEmpty() const
 {
-  QHashIterator<QCP::MarginSide, QList<QCPLayoutElement*> > it(mChildren);
+  QHashIterator<Q_CP::MarginSide, QList<QCPLayoutElement*> > it(mChildren);
   while (it.hasNext())
   {
     it.next();
@@ -3083,7 +3083,7 @@ bool QCPMarginGroup::isEmpty() const
 void QCPMarginGroup::clear()
 {
   // make all children remove themselves from this margin group:
-  QHashIterator<QCP::MarginSide, QList<QCPLayoutElement*> > it(mChildren);
+  QHashIterator<Q_CP::MarginSide, QList<QCPLayoutElement*> > it(mChildren);
   while (it.hasNext())
   {
     it.next();
@@ -3103,7 +3103,7 @@ void QCPMarginGroup::clear()
   group, and choosing the largest returned value. (QCPLayoutElement::minimumMargins is taken into
   account, too.)
 */
-int QCPMarginGroup::commonMargin(QCP::MarginSide side) const
+int QCPMarginGroup::commonMargin(Q_CP::MarginSide side) const
 {
   // query all automatic margins of the layout elements in this margin group side and find maximum:
   int result = 0;
@@ -3111,7 +3111,7 @@ int QCPMarginGroup::commonMargin(QCP::MarginSide side) const
   {
     if (!el->autoMargins().testFlag(side))
       continue;
-    int m = qMax(el->calculateAutoMargin(side), QCP::getMarginValue(el->minimumMargins(), side));
+    int m = qMax(el->calculateAutoMargin(side), Q_CP::getMarginValue(el->minimumMargins(), side));
     if (m > result)
       result = m;
   }
@@ -3124,7 +3124,7 @@ int QCPMarginGroup::commonMargin(QCP::MarginSide side) const
   
   This function does not modify the margin group property of \a element.
 */
-void QCPMarginGroup::addChild(QCP::MarginSide side, QCPLayoutElement *element)
+void QCPMarginGroup::addChild(Q_CP::MarginSide side, QCPLayoutElement *element)
 {
   if (!mChildren[side].contains(element))
     mChildren[side].append(element);
@@ -3138,7 +3138,7 @@ void QCPMarginGroup::addChild(QCP::MarginSide side, QCPLayoutElement *element)
   
   This function does not modify the margin group property of \a element.
 */
-void QCPMarginGroup::removeChild(QCP::MarginSide side, QCPLayoutElement *element)
+void QCPMarginGroup::removeChild(Q_CP::MarginSide side, QCPLayoutElement *element)
 {
   if (!mChildren[side].removeOne(element))
     qDebug() << Q_FUNC_INFO << "element is not child of this margin group side" << reinterpret_cast<quintptr>(element);
@@ -3221,13 +3221,13 @@ QCPLayoutElement::QCPLayoutElement(QCustomPlot *parentPlot) :
   mOuterRect(0, 0, 0, 0),
   mMargins(0, 0, 0, 0),
   mMinimumMargins(0, 0, 0, 0),
-  mAutoMargins(QCP::msAll)
+  mAutoMargins(Q_CP::msAll)
 {
 }
 
 QCPLayoutElement::~QCPLayoutElement()
 {
-  setMarginGroup(QCP::msAll, nullptr); // unregister at margin groups, if there are any
+  setMarginGroup(Q_CP::msAll, nullptr); // unregister at margin groups, if there are any
   // unregister at layout:
   if (qobject_cast<QCPLayout*>(mParentLayout)) // the qobject_cast is just a safeguard in case the layout forgets to call clear() in its dtor and this dtor is called by QObject dtor
     mParentLayout->take(this);
@@ -3300,7 +3300,7 @@ void QCPLayoutElement::setMinimumMargins(const QMargins &margins)
   
   \see setMinimumMargins, setMargins, QCP::MarginSide
 */
-void QCPLayoutElement::setAutoMargins(QCP::MarginSides sides)
+void QCPLayoutElement::setAutoMargins(Q_CP::MarginSides sides)
 {
   mAutoMargins = sides;
 }
@@ -3400,15 +3400,15 @@ void QCPLayoutElement::setSizeConstraintRect(SizeConstraintRect constraintRect)
   
   \see QCP::MarginSide
 */
-void QCPLayoutElement::setMarginGroup(QCP::MarginSides sides, QCPMarginGroup *group)
+void QCPLayoutElement::setMarginGroup(Q_CP::MarginSides sides, QCPMarginGroup *group)
 {
-  QVector<QCP::MarginSide> sideVector;
-  if (sides.testFlag(QCP::msLeft)) sideVector.append(QCP::msLeft);
-  if (sides.testFlag(QCP::msRight)) sideVector.append(QCP::msRight);
-  if (sides.testFlag(QCP::msTop)) sideVector.append(QCP::msTop);
-  if (sides.testFlag(QCP::msBottom)) sideVector.append(QCP::msBottom);
+  QVector<Q_CP::MarginSide> sideVector;
+  if (sides.testFlag(Q_CP::msLeft)) sideVector.append(Q_CP::msLeft);
+  if (sides.testFlag(Q_CP::msRight)) sideVector.append(Q_CP::msRight);
+  if (sides.testFlag(Q_CP::msTop)) sideVector.append(Q_CP::msTop);
+  if (sides.testFlag(Q_CP::msBottom)) sideVector.append(Q_CP::msBottom);
   
-  foreach (QCP::MarginSide side, sideVector)
+  foreach (Q_CP::MarginSide side, sideVector)
   {
     if (marginGroup(side) != group)
     {
@@ -3444,22 +3444,22 @@ void QCPLayoutElement::update(UpdatePhase phase)
 {
   if (phase == upMargins)
   {
-    if (mAutoMargins != QCP::msNone)
+    if (mAutoMargins != Q_CP::msNone)
     {
       // set the margins of this layout element according to automatic margin calculation, either directly or via a margin group:
       QMargins newMargins = mMargins;
-      const QList<QCP::MarginSide> allMarginSides = QList<QCP::MarginSide>() << QCP::msLeft << QCP::msRight << QCP::msTop << QCP::msBottom;
-      foreach (QCP::MarginSide side, allMarginSides)
+      const QList<Q_CP::MarginSide> allMarginSides = QList<Q_CP::MarginSide>() << Q_CP::msLeft << Q_CP::msRight << Q_CP::msTop << Q_CP::msBottom;
+      foreach (Q_CP::MarginSide side, allMarginSides)
       {
         if (mAutoMargins.testFlag(side)) // this side's margin shall be calculated automatically
         {
           if (mMarginGroups.contains(side))
-            QCP::setMarginValue(newMargins, side, mMarginGroups[side]->commonMargin(side)); // this side is part of a margin group, so get the margin value from that group
+            Q_CP::setMarginValue(newMargins, side, mMarginGroups[side]->commonMargin(side)); // this side is part of a margin group, so get the margin value from that group
           else
-            QCP::setMarginValue(newMargins, side, calculateAutoMargin(side)); // this side is not part of a group, so calculate the value directly
+            Q_CP::setMarginValue(newMargins, side, calculateAutoMargin(side)); // this side is not part of a group, so calculate the value directly
           // apply minimum margin restrictions:
-          if (QCP::getMarginValue(newMargins, side) < QCP::getMarginValue(mMinimumMargins, side))
-            QCP::setMarginValue(newMargins, side, QCP::getMarginValue(mMinimumMargins, side));
+          if (Q_CP::getMarginValue(newMargins, side) < Q_CP::getMarginValue(mMinimumMargins, side))
+            Q_CP::setMarginValue(newMargins, side, Q_CP::getMarginValue(mMinimumMargins, side));
         }
       }
       setMargins(newMargins);
@@ -3572,9 +3572,9 @@ void QCPLayoutElement::parentPlotInitialized(QCustomPlot *parentPlot)
   The default implementation just returns the respective manual margin (\ref setMargins) or the
   minimum margin, whichever is larger.
 */
-int QCPLayoutElement::calculateAutoMargin(QCP::MarginSide side)
+int QCPLayoutElement::calculateAutoMargin(Q_CP::MarginSide side)
 {
-  return qMax(QCP::getMarginValue(mMargins, side), QCP::getMarginValue(mMinimumMargins, side));
+  return qMax(Q_CP::getMarginValue(mMargins, side), Q_CP::getMarginValue(mMinimumMargins, side));
 }
 
 /*! \internal
@@ -5693,7 +5693,7 @@ void QCPLabelPainterPrivate::drawLabelMaybeCached(QCPPainter *painter, const QFo
   if (text.isEmpty()) return;
   QSize finalSize;
 
-  if (mParentPlot->plottingHints().testFlag(QCP::phCacheLabels) && !painter->modes().testFlag(QCPPainter::pmNoCaching)) // label caching enabled
+  if (mParentPlot->plottingHints().testFlag(Q_CP::phCacheLabels) && !painter->modes().testFlag(QCPPainter::pmNoCaching)) // label caching enabled
   {
     QByteArray key = cacheKey(text, color, rotation, side);
     CachedLabel *cachedLabel = mLabelCache.take(QString::fromUtf8(key)); // attempt to take label from cache (don't use object() because we want ownership/prevent deletion during our operations, we re-insert it afterwards)
@@ -7945,7 +7945,7 @@ void QCPGrid::setZeroLinePen(const QPen &pen)
 */
 void QCPGrid::applyDefaultAntialiasingHint(QCPPainter *painter) const
 {
-  applyAntialiasingHint(painter, mAntialiased, QCP::aeGrid);
+  applyAntialiasingHint(painter, mAntialiased, Q_CP::aeGrid);
 }
 
 /*! \internal
@@ -7980,7 +7980,7 @@ void QCPGrid::drawGridLines(QCPPainter *painter) const
     int zeroLineIndex = -1;
     if (mZeroLinePen.style() != Qt::NoPen && mParentAxis->mRange.lower < 0 && mParentAxis->mRange.upper > 0)
     {
-      applyAntialiasingHint(painter, mAntialiasedZeroLine, QCP::aeZeroLine);
+      applyAntialiasingHint(painter, mAntialiasedZeroLine, Q_CP::aeZeroLine);
       painter->setPen(mZeroLinePen);
       double epsilon = mParentAxis->range().size()*1E-6; // for comparing double to zero
       for (int i=0; i<tickCount; ++i)
@@ -8009,7 +8009,7 @@ void QCPGrid::drawGridLines(QCPPainter *painter) const
     int zeroLineIndex = -1;
     if (mZeroLinePen.style() != Qt::NoPen && mParentAxis->mRange.lower < 0 && mParentAxis->mRange.upper > 0)
     {
-      applyAntialiasingHint(painter, mAntialiasedZeroLine, QCP::aeZeroLine);
+      applyAntialiasingHint(painter, mAntialiasedZeroLine, Q_CP::aeZeroLine);
       painter->setPen(mZeroLinePen);
       double epsilon = mParentAxis->mRange.size()*1E-6; // for comparing double to zero
       for (int i=0; i<tickCount; ++i)
@@ -8045,7 +8045,7 @@ void QCPGrid::drawSubGridLines(QCPPainter *painter) const
 {
   if (!mParentAxis) { qDebug() << Q_FUNC_INFO << "invalid parent axis"; return; }
   
-  applyAntialiasingHint(painter, mAntialiasedSubGrid, QCP::aeSubGrid);
+  applyAntialiasingHint(painter, mAntialiasedSubGrid, Q_CP::aeSubGrid);
   double t; // helper variable, result of coordinate-to-pixel transforms
   painter->setPen(mSubGridPen);
   if (mParentAxis->orientation() == Qt::Horizontal)
@@ -9232,9 +9232,9 @@ void QCPAxis::rescale(bool onlyVisiblePlottables)
       continue;
     QCPRange plottableRange;
     bool currentFoundRange;
-    QCP::SignDomain signDomain = QCP::sdBoth;
+    Q_CP::SignDomain signDomain = Q_CP::sdBoth;
     if (mScaleType == stLogarithmic)
-      signDomain = (mRange.upper < 0 ? QCP::sdNegative : QCP::sdPositive);
+      signDomain = (mRange.upper < 0 ? Q_CP::sdNegative : Q_CP::sdPositive);
     if (plottable->keyAxis() == this)
       plottableRange = plottable->getKeyRange(currentFoundRange, signDomain);
     else
@@ -9461,14 +9461,14 @@ QList<QCPAbstractItem*> QCPAxis::items() const
   Transforms a margin side to the logically corresponding axis type. (QCP::msLeft to
   QCPAxis::atLeft, QCP::msRight to QCPAxis::atRight, etc.)
 */
-QCPAxis::AxisType QCPAxis::marginSideToAxisType(QCP::MarginSide side)
+QCPAxis::AxisType QCPAxis::marginSideToAxisType(Q_CP::MarginSide side)
 {
   switch (side)
   {
-    case QCP::msLeft: return atLeft;
-    case QCP::msRight: return atRight;
-    case QCP::msTop: return atTop;
-    case QCP::msBottom: return atBottom;
+    case Q_CP::msLeft: return atLeft;
+    case Q_CP::msRight: return atRight;
+    case Q_CP::msTop: return atTop;
+    case Q_CP::msBottom: return atBottom;
     default: break;
   }
   qDebug() << Q_FUNC_INFO << "Invalid margin side passed:" << static_cast<int>(side);
@@ -9532,7 +9532,7 @@ void QCPAxis::deselectEvent(bool *selectionStateChanged)
 void QCPAxis::mousePressEvent(QMouseEvent *event, const QVariant &details)
 {
   Q_UNUSED(details)
-  if (!mParentPlot->interactions().testFlag(QCP::iRangeDrag) ||
+  if (!mParentPlot->interactions().testFlag(Q_CP::iRangeDrag) ||
       !mAxisRect->rangeDrag().testFlag(orientation()) ||
       !mAxisRect->rangeDragAxes(orientation()).contains(this))
   {
@@ -9550,7 +9550,7 @@ void QCPAxis::mousePressEvent(QMouseEvent *event, const QVariant &details)
       mNotAADragBackup = mParentPlot->notAntialiasedElements();
     }
     // Mouse range dragging interaction:
-    if (mParentPlot->interactions().testFlag(QCP::iRangeDrag))
+    if (mParentPlot->interactions().testFlag(Q_CP::iRangeDrag))
       mDragStartRange = mRange;
   }
 }
@@ -9584,7 +9584,7 @@ void QCPAxis::mouseMoveEvent(QMouseEvent *event, const QPointF &startPos)
     }
     
     if (mParentPlot->noAntialiasingOnDrag())
-      mParentPlot->setNotAntialiasedElements(QCP::aeAll);
+      mParentPlot->setNotAntialiasedElements(Q_CP::aeAll);
     mParentPlot->replot(QCustomPlot::rpQueuedReplot);
   }
 }
@@ -9631,7 +9631,7 @@ void QCPAxis::mouseReleaseEvent(QMouseEvent *event, const QPointF &startPos)
 void QCPAxis::wheelEvent(QWheelEvent *event)
 {
   // Mouse range zooming interaction:
-  if (!mParentPlot->interactions().testFlag(QCP::iRangeZoom) ||
+  if (!mParentPlot->interactions().testFlag(Q_CP::iRangeZoom) ||
       !mAxisRect->rangeZoom().testFlag(orientation()) ||
       !mAxisRect->rangeZoomAxes(orientation()).contains(this))
   {
@@ -9674,7 +9674,7 @@ void QCPAxis::wheelEvent(QWheelEvent *event)
 */
 void QCPAxis::applyDefaultAntialiasingHint(QCPPainter *painter) const
 {
-  applyAntialiasingHint(painter, mAntialiased, QCP::aeAxes);
+  applyAntialiasingHint(painter, mAntialiased, Q_CP::aeAxes);
 }
 
 /*! \internal
@@ -9877,9 +9877,9 @@ int QCPAxis::calculateMargin()
 }
 
 /* inherits documentation from base class */
-QCP::Interaction QCPAxis::selectionCategory() const
+Q_CP::Interaction QCPAxis::selectionCategory() const
 {
-  return QCP::iSelectAxes;
+  return Q_CP::iSelectAxes;
 }
 
 
@@ -10235,7 +10235,7 @@ void QCPAxisPainterPrivate::placeTickLabel(QCPPainter *painter, double position,
     case QCPAxis::atTop:    labelAnchor = QPointF(position, axisRect.top()-distanceToAxis-offset); break;
     case QCPAxis::atBottom: labelAnchor = QPointF(position, axisRect.bottom()+distanceToAxis+offset); break;
   }
-  if (mParentPlot->plottingHints().testFlag(QCP::phCacheLabels) && !painter->modes().testFlag(QCPPainter::pmNoCaching)) // label caching enabled
+  if (mParentPlot->plottingHints().testFlag(Q_CP::phCacheLabels) && !painter->modes().testFlag(QCPPainter::pmNoCaching)) // label caching enabled
   {
     CachedLabel *cachedLabel = mLabelCache.take(text); // attempt to get label from cache
     if (!cachedLabel)  // no cached label existed, create it
@@ -10537,7 +10537,7 @@ void QCPAxisPainterPrivate::getMaxTickLabelSize(const QFont &font, const QString
 {
   // note: this function must return the same tick label sizes as the placeTickLabel function.
   QSize finalSize;
-  if (mParentPlot->plottingHints().testFlag(QCP::phCacheLabels) && mLabelCache.contains(text)) // label caching enabled and have cached label
+  if (mParentPlot->plottingHints().testFlag(Q_CP::phCacheLabels) && mLabelCache.contains(text)) // label caching enabled and have cached label
   {
     const CachedLabel *cachedLabel = mLabelCache.object(text);
     finalSize = cachedLabel->pixmap.size()/mParentPlot->bufferDevicePixelRatio();
@@ -11432,7 +11432,7 @@ QCPAbstractPlottable::QCPAbstractPlottable(QCPAxis *keyAxis, QCPAxis *valueAxis)
   mBrush(Qt::NoBrush),
   mKeyAxis(keyAxis),
   mValueAxis(valueAxis),
-  mSelectable(QCP::stWhole),
+  mSelectable(Q_CP::stWhole),
   mSelectionDecorator(nullptr)
 {
   if (keyAxis->parentPlot() != valueAxis->parentPlot())
@@ -11608,7 +11608,7 @@ void QCPAbstractPlottable::setSelectionDecorator(QCPSelectionDecorator *decorato
   
   \see setSelection, QCP::SelectionType
 */
-void QCPAbstractPlottable::setSelectable(QCP::SelectionType selectable)
+void QCPAbstractPlottable::setSelectable(Q_CP::SelectionType selectable)
 {
   if (mSelectable != selectable)
   {
@@ -11731,9 +11731,9 @@ void QCPAbstractPlottable::rescaleKeyAxis(bool onlyEnlarge) const
   QCPAxis *keyAxis = mKeyAxis.data();
   if (!keyAxis) { qDebug() << Q_FUNC_INFO << "invalid key axis"; return; }
   
-  QCP::SignDomain signDomain = QCP::sdBoth;
+  Q_CP::SignDomain signDomain = Q_CP::sdBoth;
   if (keyAxis->scaleType() == QCPAxis::stLogarithmic)
-    signDomain = (keyAxis->range().upper < 0 ? QCP::sdNegative : QCP::sdPositive);
+    signDomain = (keyAxis->range().upper < 0 ? Q_CP::sdNegative : Q_CP::sdPositive);
   
   bool foundRange;
   QCPRange newRange = getKeyRange(foundRange, signDomain);
@@ -11774,9 +11774,9 @@ void QCPAbstractPlottable::rescaleValueAxis(bool onlyEnlarge, bool inKeyRange) c
   QCPAxis *valueAxis = mValueAxis.data();
   if (!keyAxis || !valueAxis) { qDebug() << Q_FUNC_INFO << "invalid key or value axis"; return; }
   
-  QCP::SignDomain signDomain = QCP::sdBoth;
+  Q_CP::SignDomain signDomain = Q_CP::sdBoth;
   if (valueAxis->scaleType() == QCPAxis::stLogarithmic)
-    signDomain = (valueAxis->range().upper < 0 ? QCP::sdNegative : QCP::sdPositive);
+    signDomain = (valueAxis->range().upper < 0 ? Q_CP::sdNegative : Q_CP::sdPositive);
   
   bool foundRange;
   QCPRange newRange = getValueRange(foundRange, signDomain, inKeyRange ? keyAxis->range() : QCPRange());
@@ -11898,9 +11898,9 @@ QRect QCPAbstractPlottable::clipRect() const
 }
 
 /* inherits documentation from base class */
-QCP::Interaction QCPAbstractPlottable::selectionCategory() const
+Q_CP::Interaction QCPAbstractPlottable::selectionCategory() const
 {
-  return QCP::iSelectPlottables;
+  return Q_CP::iSelectPlottables;
 }
 
 /*! \internal
@@ -11920,7 +11920,7 @@ QCP::Interaction QCPAbstractPlottable::selectionCategory() const
 */
 void QCPAbstractPlottable::applyDefaultAntialiasingHint(QCPPainter *painter) const
 {
-  applyAntialiasingHint(painter, mAntialiased, QCP::aePlottables);
+  applyAntialiasingHint(painter, mAntialiased, Q_CP::aePlottables);
 }
 
 /*! \internal
@@ -11936,7 +11936,7 @@ void QCPAbstractPlottable::applyDefaultAntialiasingHint(QCPPainter *painter) con
 */
 void QCPAbstractPlottable::applyFillAntialiasingHint(QCPPainter *painter) const
 {
-  applyAntialiasingHint(painter, mAntialiasedFill, QCP::aeFills);
+  applyAntialiasingHint(painter, mAntialiasedFill, Q_CP::aeFills);
 }
 
 /*! \internal
@@ -11952,7 +11952,7 @@ void QCPAbstractPlottable::applyFillAntialiasingHint(QCPPainter *painter) const
 */
 void QCPAbstractPlottable::applyScattersAntialiasingHint(QCPPainter *painter) const
 {
-  applyAntialiasingHint(painter, mAntialiasedScatters, QCP::aeScatters);
+  applyAntialiasingHint(painter, mAntialiasedScatters, Q_CP::aeScatters);
 }
 
 /* inherits documentation from base class */
@@ -11960,13 +11960,13 @@ void QCPAbstractPlottable::selectEvent(QMouseEvent *event, bool additive, const 
 {
   Q_UNUSED(event)
   
-  if (mSelectable != QCP::stNone)
+  if (mSelectable != Q_CP::stNone)
   {
     QCPDataSelection newSelection = details.value<QCPDataSelection>();
     QCPDataSelection selectionBefore = mSelection;
     if (additive)
     {
-      if (mSelectable == QCP::stWhole) // in whole selection mode, we toggle to no selection even if currently unselected point was hit
+      if (mSelectable == Q_CP::stWhole) // in whole selection mode, we toggle to no selection even if currently unselected point was hit
       {
         if (selected())
           setSelection(QCPDataSelection());
@@ -11989,7 +11989,7 @@ void QCPAbstractPlottable::selectEvent(QMouseEvent *event, bool additive, const 
 /* inherits documentation from base class */
 void QCPAbstractPlottable::deselectEvent(bool *selectionStateChanged)
 {
-  if (mSelectable != QCP::stNone)
+  if (mSelectable != Q_CP::stNone)
   {
     QCPDataSelection selectionBefore = mSelection;
     setSelection(QCPDataSelection());
@@ -13123,7 +13123,7 @@ QRect QCPAbstractItem::clipRect() const
 */
 void QCPAbstractItem::applyDefaultAntialiasingHint(QCPPainter *painter) const
 {
-  applyAntialiasingHint(painter, mAntialiased, QCP::aeItems);
+  applyAntialiasingHint(painter, mAntialiased, Q_CP::aeItems);
 }
 
 /*! \internal
@@ -13265,9 +13265,9 @@ void QCPAbstractItem::deselectEvent(bool *selectionStateChanged)
 }
 
 /* inherits documentation from base class */
-QCP::Interaction QCPAbstractItem::selectionCategory() const
+Q_CP::Interaction QCPAbstractItem::selectionCategory() const
 {
-  return QCP::iSelectItems;
+  return Q_CP::iSelectItems;
 }
 /* end of 'src/item.cpp' */
 
@@ -13612,18 +13612,18 @@ QCustomPlot::QCustomPlot(QWidget *parent) :
   mBufferDevicePixelRatio(1.0), // will be adapted to primary screen below
   mPlotLayout(nullptr),
   mAutoAddPlottableToLegend(true),
-  mAntialiasedElements(QCP::aeNone),
-  mNotAntialiasedElements(QCP::aeNone),
-  mInteractions(QCP::iNone),
+  mAntialiasedElements(Q_CP::aeNone),
+  mNotAntialiasedElements(Q_CP::aeNone),
+  mInteractions(Q_CP::iNone),
   mSelectionTolerance(8),
   mNoAntialiasingOnDrag(false),
   mBackgroundBrush(Qt::white, Qt::SolidPattern),
   mBackgroundScaled(true),
   mBackgroundScaledMode(Qt::KeepAspectRatioByExpanding),
   mCurrentLayer(nullptr),
-  mPlottingHints(QCP::phCacheLabels|QCP::phImmediateRefresh),
+  mPlottingHints(Q_CP::phCacheLabels|Q_CP::phImmediateRefresh),
   mMultiSelectModifier(Qt::ControlModifier),
-  mSelectionRectMode(QCP::srmNone),
+  mSelectionRectMode(Q_CP::srmNone),
   mSelectionRect(nullptr),
   mOpenGl(false),
   mMouseHasMoved(false),
@@ -13634,7 +13634,7 @@ QCustomPlot::QCustomPlot(QWidget *parent) :
   mReplotTime(0),
   mReplotTimeAverage(0),
   mOpenGlMultisamples(16),
-  mOpenGlAntialiasedElementsBackup(QCP::aeNone),
+  mOpenGlAntialiasedElementsBackup(Q_CP::aeNone),
   mOpenGlCacheLabelsBackup(true)
 {
   setAttribute(Qt::WA_NoMousePropagation);
@@ -13653,7 +13653,7 @@ QCustomPlot::QCustomPlot(QWidget *parent) :
 #endif
   
   mOpenGlAntialiasedElementsBackup = mAntialiasedElements;
-  mOpenGlCacheLabelsBackup = mPlottingHints.testFlag(QCP::phCacheLabels);
+  mOpenGlCacheLabelsBackup = mPlottingHints.testFlag(Q_CP::phCacheLabels);
   // create initial layers:
   mLayers.append(new QCPLayer(this, QLatin1String("background")));
   mLayers.append(new QCPLayer(this, QLatin1String("grid")));
@@ -13734,7 +13734,7 @@ QCustomPlot::~QCustomPlot()
   
   \see setNotAntialiasedElements
 */
-void QCustomPlot::setAntialiasedElements(const QCP::AntialiasedElements &antialiasedElements)
+void QCustomPlot::setAntialiasedElements(const Q_CP::AntialiasedElements &antialiasedElements)
 {
   mAntialiasedElements = antialiasedElements;
   
@@ -13750,7 +13750,7 @@ void QCustomPlot::setAntialiasedElements(const QCP::AntialiasedElements &antiali
   
   \see setNotAntialiasedElement
 */
-void QCustomPlot::setAntialiasedElement(QCP::AntialiasedElement antialiasedElement, bool enabled)
+void QCustomPlot::setAntialiasedElement(Q_CP::AntialiasedElement antialiasedElement, bool enabled)
 {
   if (!enabled && mAntialiasedElements.testFlag(antialiasedElement))
     mAntialiasedElements &= ~antialiasedElement;
@@ -13780,7 +13780,7 @@ void QCustomPlot::setAntialiasedElement(QCP::AntialiasedElement antialiasedEleme
   
   \see setAntialiasedElements
 */
-void QCustomPlot::setNotAntialiasedElements(const QCP::AntialiasedElements &notAntialiasedElements)
+void QCustomPlot::setNotAntialiasedElements(const Q_CP::AntialiasedElements &notAntialiasedElements)
 {
   mNotAntialiasedElements = notAntialiasedElements;
   
@@ -13796,7 +13796,7 @@ void QCustomPlot::setNotAntialiasedElements(const QCP::AntialiasedElements &notA
   
   \see setAntialiasedElement
 */
-void QCustomPlot::setNotAntialiasedElement(QCP::AntialiasedElement notAntialiasedElement, bool enabled)
+void QCustomPlot::setNotAntialiasedElement(Q_CP::AntialiasedElement notAntialiasedElement, bool enabled)
 {
   if (!enabled && mNotAntialiasedElements.testFlag(notAntialiasedElement))
     mNotAntialiasedElements &= ~notAntialiasedElement;
@@ -13873,7 +13873,7 @@ void QCustomPlot::setAutoAddPlottableToLegend(bool on)
   
   \see setInteraction, setSelectionTolerance
 */
-void QCustomPlot::setInteractions(const QCP::Interactions &interactions)
+void QCustomPlot::setInteractions(const Q_CP::Interactions &interactions)
 {
   mInteractions = interactions;
 }
@@ -13885,7 +13885,7 @@ void QCustomPlot::setInteractions(const QCP::Interactions &interactions)
   
   \see setInteractions
 */
-void QCustomPlot::setInteraction(const QCP::Interaction &interaction, bool enabled)
+void QCustomPlot::setInteraction(const Q_CP::Interaction &interaction, bool enabled)
 {
   if (!enabled && mInteractions.testFlag(interaction))
     mInteractions &= ~interaction;
@@ -13930,7 +13930,7 @@ void QCustomPlot::setNoAntialiasingOnDrag(bool enabled)
   
   \see setPlottingHint
 */
-void QCustomPlot::setPlottingHints(const QCP::PlottingHints &hints)
+void QCustomPlot::setPlottingHints(const Q_CP::PlottingHints &hints)
 {
   mPlottingHints = hints;
 }
@@ -13940,9 +13940,9 @@ void QCustomPlot::setPlottingHints(const QCP::PlottingHints &hints)
   
   \see setPlottingHints
 */
-void QCustomPlot::setPlottingHint(QCP::PlottingHint hint, bool enabled)
+void QCustomPlot::setPlottingHint(Q_CP::PlottingHint hint, bool enabled)
 {
-  QCP::PlottingHints newHints = mPlottingHints;
+  Q_CP::PlottingHints newHints = mPlottingHints;
   if (!enabled)
     newHints &= ~hint;
   else
@@ -13987,23 +13987,23 @@ void QCustomPlot::setMultiSelectModifier(Qt::KeyboardModifier modifier)
   
   \see setInteractions, setSelectionRect, QCPSelectionRect
 */
-void QCustomPlot::setSelectionRectMode(QCP::SelectionRectMode mode)
+void QCustomPlot::setSelectionRectMode(Q_CP::SelectionRectMode mode)
 {
   if (mSelectionRect)
   {
-    if (mode == QCP::srmNone)
+    if (mode == Q_CP::srmNone)
       mSelectionRect->cancel(); // when switching to none, we immediately want to abort a potentially active selection rect
     
     // disconnect old connections:
-    if (mSelectionRectMode == QCP::srmSelect)
+    if (mSelectionRectMode == Q_CP::srmSelect)
       disconnect(mSelectionRect, SIGNAL(accepted(QRect,QMouseEvent*)), this, SLOT(processRectSelection(QRect,QMouseEvent*)));
-    else if (mSelectionRectMode == QCP::srmZoom)
+    else if (mSelectionRectMode == Q_CP::srmZoom)
       disconnect(mSelectionRect, SIGNAL(accepted(QRect,QMouseEvent*)), this, SLOT(processRectZoom(QRect,QMouseEvent*)));
     
     // establish new ones:
-    if (mode == QCP::srmSelect)
+    if (mode == Q_CP::srmSelect)
       connect(mSelectionRect, SIGNAL(accepted(QRect,QMouseEvent*)), this, SLOT(processRectSelection(QRect,QMouseEvent*)));
-    else if (mode == QCP::srmZoom)
+    else if (mode == Q_CP::srmZoom)
       connect(mSelectionRect, SIGNAL(accepted(QRect,QMouseEvent*)), this, SLOT(processRectZoom(QRect,QMouseEvent*)));
   }
   
@@ -14029,9 +14029,9 @@ void QCustomPlot::setSelectionRect(QCPSelectionRect *selectionRect)
   if (mSelectionRect)
   {
     // establish connections with new selection rect:
-    if (mSelectionRectMode == QCP::srmSelect)
+    if (mSelectionRectMode == Q_CP::srmSelect)
       connect(mSelectionRect, SIGNAL(accepted(QRect,QMouseEvent*)), this, SLOT(processRectSelection(QRect,QMouseEvent*)));
-    else if (mSelectionRectMode == QCP::srmZoom)
+    else if (mSelectionRectMode == Q_CP::srmZoom)
       connect(mSelectionRect, SIGNAL(accepted(QRect,QMouseEvent*)), this, SLOT(processRectZoom(QRect,QMouseEvent*)));
   }
 }
@@ -15158,7 +15158,7 @@ void QCustomPlot::replot(QCustomPlot::RefreshPriority refreshPriority)
   foreach (QSharedPointer<QCPAbstractPaintBuffer> buffer, mPaintBuffers)
     buffer->setInvalidated(false);
   
-  if ((refreshPriority == rpRefreshHint && mPlottingHints.testFlag(QCP::phImmediateRefresh)) || refreshPriority==rpImmediateRefresh)
+  if ((refreshPriority == rpRefreshHint && mPlottingHints.testFlag(Q_CP::phImmediateRefresh)) || refreshPriority==rpImmediateRefresh)
     repaint();
   else
     update();
@@ -15243,7 +15243,7 @@ void QCustomPlot::rescaleAxes(bool onlyVisiblePlottables)
 
   \see savePng, saveBmp, saveJpg, saveRastered
 */
-bool QCustomPlot::savePdf(const QString &fileName, int width, int height, QCP::ExportPen exportPen, const QString &pdfCreator, const QString &pdfTitle)
+bool QCustomPlot::savePdf(const QString &fileName, int width, int height, Q_CP::ExportPen exportPen, const QString &pdfCreator, const QString &pdfTitle)
 {
   bool success = false;
 #ifdef QT_NO_PRINTER
@@ -15290,7 +15290,7 @@ bool QCustomPlot::savePdf(const QString &fileName, int width, int height, QCP::E
   {
     printpainter.setMode(QCPPainter::pmVectorized);
     printpainter.setMode(QCPPainter::pmNoCaching);
-    printpainter.setMode(QCPPainter::pmNonCosmetic, exportPen==QCP::epNoCosmetic);
+    printpainter.setMode(QCPPainter::pmNonCosmetic, exportPen==Q_CP::epNoCosmetic);
     printpainter.setWindow(mViewport);
     if (mBackgroundBrush.style() != Qt::NoBrush &&
         mBackgroundBrush.color() != Qt::white &&
@@ -15351,7 +15351,7 @@ bool QCustomPlot::savePdf(const QString &fileName, int width, int height, QCP::E
 
   \see savePdf, saveBmp, saveJpg, saveRastered
 */
-bool QCustomPlot::savePng(const QString &fileName, int width, int height, double scale, int quality, int resolution, QCP::ResolutionUnit resolutionUnit)
+bool QCustomPlot::savePng(const QString &fileName, int width, int height, double scale, int quality, int resolution, Q_CP::ResolutionUnit resolutionUnit)
 {
   return saveRastered(fileName, width, height, scale, "PNG", quality, resolution, resolutionUnit);
 }
@@ -15398,7 +15398,7 @@ bool QCustomPlot::savePng(const QString &fileName, int width, int height, double
 
   \see savePdf, savePng, saveBmp, saveRastered
 */
-bool QCustomPlot::saveJpg(const QString &fileName, int width, int height, double scale, int quality, int resolution, QCP::ResolutionUnit resolutionUnit)
+bool QCustomPlot::saveJpg(const QString &fileName, int width, int height, double scale, int quality, int resolution, Q_CP::ResolutionUnit resolutionUnit)
 {
   return saveRastered(fileName, width, height, scale, "JPG", quality, resolution, resolutionUnit);
 }
@@ -15442,7 +15442,7 @@ bool QCustomPlot::saveJpg(const QString &fileName, int width, int height, double
 
   \see savePdf, savePng, saveJpg, saveRastered
 */
-bool QCustomPlot::saveBmp(const QString &fileName, int width, int height, double scale, int resolution, QCP::ResolutionUnit resolutionUnit)
+bool QCustomPlot::saveBmp(const QString &fileName, int width, int height, double scale, int resolution, Q_CP::ResolutionUnit resolutionUnit)
 {
   return saveRastered(fileName, width, height, scale, "BMP", -1, resolution, resolutionUnit);
 }
@@ -15573,9 +15573,9 @@ void QCustomPlot::mousePressEvent(QMouseEvent *event)
   mMouseHasMoved = false;
   mMousePressPos = event->pos();
   
-  if (mSelectionRect && mSelectionRectMode != QCP::srmNone)
+  if (mSelectionRect && mSelectionRectMode != Q_CP::srmNone)
   {
-    if (mSelectionRectMode != QCP::srmZoom || qobject_cast<QCPAxisRect*>(axisRectAt(mMousePressPos))) // in zoom mode only activate selection rect if on an axis rect
+    if (mSelectionRectMode != Q_CP::srmZoom || qobject_cast<QCPAxisRect*>(axisRectAt(mMousePressPos))) // in zoom mode only activate selection rect if on an axis rect
       mSelectionRect->startSelection(event);
   } else
   {
@@ -16046,7 +16046,7 @@ void QCustomPlot::processRectSelection(QRect rect, QMouseEvent *event)
   
   bool selectionStateChanged = false;
   
-  if (mInteractions.testFlag(QCP::iSelectPlottables))
+  if (mInteractions.testFlag(Q_CP::iSelectPlottables))
   {
     SelectionCandidates potentialSelections;
     QRectF rectF(rect.normalized());
@@ -16063,7 +16063,7 @@ void QCustomPlot::processRectSelection(QRect rect, QMouseEvent *event)
         }
       }
       
-      if (!mInteractions.testFlag(QCP::iMultiSelect))
+      if (!mInteractions.testFlag(Q_CP::iMultiSelect))
       {
         // only leave plottable with most selected points in map, since we will only select a single plottable:
         if (!potentialSelections.isEmpty())
@@ -16161,7 +16161,7 @@ void QCustomPlot::processPointSelection(QMouseEvent *event)
   QVariant details;
   QCPLayerable *clickedLayerable = layerableAt(event->pos(), true, &details);
   bool selectionStateChanged = false;
-  bool additive = mInteractions.testFlag(QCP::iMultiSelect) && event->modifiers().testFlag(mMultiSelectModifier);
+  bool additive = mInteractions.testFlag(Q_CP::iMultiSelect) && event->modifiers().testFlag(mMultiSelectModifier);
   // deselect all other layerables if not additive selection:
   if (!additive)
   {
@@ -16379,16 +16379,16 @@ QList<QCPLayerable*> QCustomPlot::layerableListAt(const QPointF &pos, bool onlyS
 
   \see saveBmp, saveJpg, savePng, savePdf
 */
-bool QCustomPlot::saveRastered(const QString &fileName, int width, int height, double scale, const char *format, int quality, int resolution, QCP::ResolutionUnit resolutionUnit)
+bool QCustomPlot::saveRastered(const QString &fileName, int width, int height, double scale, const char *format, int quality, int resolution, Q_CP::ResolutionUnit resolutionUnit)
 {
   QImage buffer = toPixmap(width, height, scale).toImage();
   
   int dotsPerMeter = 0;
   switch (resolutionUnit)
   {
-    case QCP::ruDotsPerMeter: dotsPerMeter = resolution; break;
-    case QCP::ruDotsPerCentimeter: dotsPerMeter = resolution*100; break;
-    case QCP::ruDotsPerInch: dotsPerMeter = int(resolution/0.0254); break;
+    case Q_CP::ruDotsPerMeter: dotsPerMeter = resolution; break;
+    case Q_CP::ruDotsPerCentimeter: dotsPerMeter = resolution*100; break;
+    case Q_CP::ruDotsPerInch: dotsPerMeter = int(resolution/0.0254); break;
   }
   buffer.setDotsPerMeterX(dotsPerMeter); // this is saved together with some image formats, e.g. PNG, and is relevant when opening image in other tools
   buffer.setDotsPerMeterY(dotsPerMeter); // this is saved together with some image formats, e.g. PNG, and is relevant when opening image in other tools
@@ -18482,7 +18482,7 @@ void QCPAxisRect::updateAxesOffset(QCPAxis::AxisType type)
 }
 
 /* inherits documentation from base class */
-int QCPAxisRect::calculateAutoMargin(QCP::MarginSide side)
+int QCPAxisRect::calculateAutoMargin(Q_CP::MarginSide side)
 {
   if (!mAutoMargins.testFlag(side))
     qDebug() << Q_FUNC_INFO << "Called with side that isn't specified as auto margin";
@@ -18546,7 +18546,7 @@ void QCPAxisRect::mousePressEvent(QMouseEvent *event, const QVariant &details)
       mNotAADragBackup = mParentPlot->notAntialiasedElements();
     }
     // Mouse range dragging interaction:
-    if (mParentPlot->interactions().testFlag(QCP::iRangeDrag))
+    if (mParentPlot->interactions().testFlag(Q_CP::iRangeDrag))
     {
       mDragStartHorzRange.clear();
       foreach (QPointer<QCPAxis> axis, mRangeDragHorzAxis)
@@ -18569,7 +18569,7 @@ void QCPAxisRect::mouseMoveEvent(QMouseEvent *event, const QPointF &startPos)
 {
   Q_UNUSED(startPos)
   // Mouse range dragging interaction:
-  if (mDragging && mParentPlot->interactions().testFlag(QCP::iRangeDrag))
+  if (mDragging && mParentPlot->interactions().testFlag(Q_CP::iRangeDrag))
   {
     
     if (mRangeDrag.testFlag(Qt::Horizontal))
@@ -18617,7 +18617,7 @@ void QCPAxisRect::mouseMoveEvent(QMouseEvent *event, const QPointF &startPos)
     if (mRangeDrag != 0) // if either vertical or horizontal drag was enabled, do a replot
     {
       if (mParentPlot->noAntialiasingOnDrag())
-        mParentPlot->setNotAntialiasedElements(QCP::aeAll);
+        mParentPlot->setNotAntialiasedElements(Q_CP::aeAll);
       mParentPlot->replot(QCustomPlot::rpQueuedReplot);
     }
     
@@ -18666,7 +18666,7 @@ void QCPAxisRect::wheelEvent(QWheelEvent *event)
 #endif
   
   // Mouse range zooming interaction:
-  if (mParentPlot->interactions().testFlag(QCP::iRangeZoom))
+  if (mParentPlot->interactions().testFlag(Q_CP::iRangeZoom))
   {
     if (mRangeZoom != 0)
     {
@@ -18846,7 +18846,7 @@ double QCPAbstractLegendItem::selectTest(const QPointF &pos, bool onlySelectable
 /* inherits documentation from base class */
 void QCPAbstractLegendItem::applyDefaultAntialiasingHint(QCPPainter *painter) const
 {
-  applyAntialiasingHint(painter, mAntialiased, QCP::aeLegendItems);
+  applyAntialiasingHint(painter, mAntialiased, Q_CP::aeLegendItems);
 }
 
 /* inherits documentation from base class */
@@ -19522,7 +19522,7 @@ QList<QCPAbstractLegendItem *> QCPLegend::selectedItems() const
 */
 void QCPLegend::applyDefaultAntialiasingHint(QCPPainter *painter) const
 {
-  applyAntialiasingHint(painter, mAntialiased, QCP::aeLegend);
+  applyAntialiasingHint(painter, mAntialiased, Q_CP::aeLegend);
 }
 
 /*! \internal
@@ -19601,15 +19601,15 @@ void QCPLegend::deselectEvent(bool *selectionStateChanged)
 }
 
 /* inherits documentation from base class */
-QCP::Interaction QCPLegend::selectionCategory() const
+Q_CP::Interaction QCPLegend::selectionCategory() const
 {
-  return QCP::iSelectLegend;
+  return Q_CP::iSelectLegend;
 }
 
 /* inherits documentation from base class */
-QCP::Interaction QCPAbstractLegendItem::selectionCategory() const
+Q_CP::Interaction QCPAbstractLegendItem::selectionCategory() const
 {
-  return QCP::iSelectLegend;
+  return Q_CP::iSelectLegend;
 }
 
 /* inherits documentation from base class */
@@ -19891,7 +19891,7 @@ void QCPTextElement::setSelected(bool selected)
 /* inherits documentation from base class */
 void QCPTextElement::applyDefaultAntialiasingHint(QCPPainter *painter) const
 {
-  applyAntialiasingHint(painter, mAntialiased, QCP::aeOther);
+  applyAntialiasingHint(painter, mAntialiased, Q_CP::aeOther);
 }
 
 /* inherits documentation from base class */
@@ -20401,9 +20401,9 @@ void QCPColorScale::rescaleDataRange(bool onlyVisibleMaps)
   QList<QCPColorMap*> maps = colorMaps();
   QCPRange newRange;
   bool haveRange = false;
-  QCP::SignDomain sign = QCP::sdBoth;
+  Q_CP::SignDomain sign = Q_CP::sdBoth;
   if (mDataScaleType == QCPAxis::stLogarithmic)
-    sign = (mDataRange.upper < 0 ? QCP::sdNegative : QCP::sdPositive);
+    sign = (mDataRange.upper < 0 ? Q_CP::sdNegative : Q_CP::sdPositive);
   foreach (QCPColorMap *map, maps)
   {
     if (!map->realVisibility() && onlyVisibleMaps)
@@ -20413,13 +20413,13 @@ void QCPColorScale::rescaleDataRange(bool onlyVisibleMaps)
     {
       bool currentFoundRange = true;
       mapRange = map->data()->dataBounds();
-      if (sign == QCP::sdPositive)
+      if (sign == Q_CP::sdPositive)
       {
         if (mapRange.lower <= 0 && mapRange.upper > 0)
           mapRange.lower = mapRange.upper*1e-3;
         else if (mapRange.lower <= 0 && mapRange.upper <= 0)
           currentFoundRange = false;
-      } else if (sign == QCP::sdNegative)
+      } else if (sign == Q_CP::sdNegative)
       {
         if (mapRange.upper >= 0 && mapRange.lower < 0)
           mapRange.upper = mapRange.lower*1e-3;
@@ -21088,12 +21088,12 @@ void QCPGraph::addData(double key, double value)
 */
 double QCPGraph::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
-  if ((onlySelectable && mSelectable == QCP::stNone) || mDataContainer->isEmpty())
+  if ((onlySelectable && mSelectable == Q_CP::stNone) || mDataContainer->isEmpty())
     return -1;
   if (!mKeyAxis || !mValueAxis)
     return -1;
   
-  if (mKeyAxis.data()->axisRect()->rect().contains(pos.toPoint()) || mParentPlot->interactions().testFlag(QCP::iSelectPlottablesBeyondAxisRect))
+  if (mKeyAxis.data()->axisRect()->rect().contains(pos.toPoint()) || mParentPlot->interactions().testFlag(Q_CP::iSelectPlottablesBeyondAxisRect))
   {
     QCPGraphDataContainer::const_iterator closestDataPoint = mDataContainer->constEnd();
     double result = pointDistance(pos, closestDataPoint);
@@ -21108,13 +21108,13 @@ double QCPGraph::selectTest(const QPointF &pos, bool onlySelectable, QVariant *d
 }
 
 /* inherits documentation from base class */
-QCPRange QCPGraph::getKeyRange(bool &foundRange, QCP::SignDomain inSignDomain) const
+QCPRange QCPGraph::getKeyRange(bool &foundRange, Q_CP::SignDomain inSignDomain) const
 {
   return mDataContainer->keyRange(foundRange, inSignDomain);
 }
 
 /* inherits documentation from base class */
-QCPRange QCPGraph::getValueRange(bool &foundRange, QCP::SignDomain inSignDomain, const QCPRange &inKeyRange) const
+QCPRange QCPGraph::getValueRange(bool &foundRange, Q_CP::SignDomain inSignDomain, const QCPRange &inKeyRange) const
 {
   return mDataContainer->valueRange(foundRange, inSignDomain, inKeyRange);
 }
@@ -22851,12 +22851,12 @@ void QCPCurve::addData(double key, double value)
 */
 double QCPCurve::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
-  if ((onlySelectable && mSelectable == QCP::stNone) || mDataContainer->isEmpty())
+  if ((onlySelectable && mSelectable == Q_CP::stNone) || mDataContainer->isEmpty())
     return -1;
   if (!mKeyAxis || !mValueAxis)
     return -1;
   
-  if (mKeyAxis.data()->axisRect()->rect().contains(pos.toPoint()) || mParentPlot->interactions().testFlag(QCP::iSelectPlottablesBeyondAxisRect))
+  if (mKeyAxis.data()->axisRect()->rect().contains(pos.toPoint()) || mParentPlot->interactions().testFlag(Q_CP::iSelectPlottablesBeyondAxisRect))
   {
     QCPCurveDataContainer::const_iterator closestDataPoint = mDataContainer->constEnd();
     double result = pointDistance(pos, closestDataPoint);
@@ -22871,13 +22871,13 @@ double QCPCurve::selectTest(const QPointF &pos, bool onlySelectable, QVariant *d
 }
 
 /* inherits documentation from base class */
-QCPRange QCPCurve::getKeyRange(bool &foundRange, QCP::SignDomain inSignDomain) const
+QCPRange QCPCurve::getKeyRange(bool &foundRange, Q_CP::SignDomain inSignDomain) const
 {
   return mDataContainer->keyRange(foundRange, inSignDomain);
 }
 
 /* inherits documentation from base class */
-QCPRange QCPCurve::getValueRange(bool &foundRange, QCP::SignDomain inSignDomain, const QCPRange &inKeyRange) const
+QCPRange QCPCurve::getValueRange(bool &foundRange, Q_CP::SignDomain inSignDomain, const QCPRange &inKeyRange) const
 {
   return mDataContainer->valueRange(foundRange, inSignDomain, inKeyRange);
 }
@@ -24662,7 +24662,7 @@ void QCPBars::moveAbove(QCPBars *bars)
 QCPDataSelection QCPBars::selectTestRect(const QRectF &rect, bool onlySelectable) const
 {
   QCPDataSelection result;
-  if ((onlySelectable && mSelectable == QCP::stNone) || mDataContainer->isEmpty())
+  if ((onlySelectable && mSelectable == Q_CP::stNone) || mDataContainer->isEmpty())
     return result;
   if (!mKeyAxis || !mValueAxis)
     return result;
@@ -24690,12 +24690,12 @@ QCPDataSelection QCPBars::selectTestRect(const QRectF &rect, bool onlySelectable
 double QCPBars::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
   Q_UNUSED(details)
-  if ((onlySelectable && mSelectable == QCP::stNone) || mDataContainer->isEmpty())
+  if ((onlySelectable && mSelectable == Q_CP::stNone) || mDataContainer->isEmpty())
     return -1;
   if (!mKeyAxis || !mValueAxis)
     return -1;
   
-  if (mKeyAxis.data()->axisRect()->rect().contains(pos.toPoint()) || mParentPlot->interactions().testFlag(QCP::iSelectPlottablesBeyondAxisRect))
+  if (mKeyAxis.data()->axisRect()->rect().contains(pos.toPoint()) || mParentPlot->interactions().testFlag(Q_CP::iSelectPlottablesBeyondAxisRect))
   {
     // get visible data range:
     QCPBarsDataContainer::const_iterator visibleBegin, visibleEnd;
@@ -24717,7 +24717,7 @@ double QCPBars::selectTest(const QPointF &pos, bool onlySelectable, QVariant *de
 }
 
 /* inherits documentation from base class */
-QCPRange QCPBars::getKeyRange(bool &foundRange, QCP::SignDomain inSignDomain) const
+QCPRange QCPBars::getKeyRange(bool &foundRange, Q_CP::SignDomain inSignDomain) const
 {
   /* Note: If this QCPBars uses absolute pixels as width (or is in a QCPBarsGroup with spacing in
   absolute pixels), using this method to adapt the key axis range to fit the bars into the
@@ -24756,7 +24756,7 @@ QCPRange QCPBars::getKeyRange(bool &foundRange, QCP::SignDomain inSignDomain) co
 }
 
 /* inherits documentation from base class */
-QCPRange QCPBars::getValueRange(bool &foundRange, QCP::SignDomain inSignDomain, const QCPRange &inKeyRange) const
+QCPRange QCPBars::getValueRange(bool &foundRange, Q_CP::SignDomain inSignDomain, const QCPRange &inKeyRange) const
 {
   // Note: can't simply use mDataContainer->valueRange here because we need to
   // take into account bar base value and possible stacking of multiple bars
@@ -24776,7 +24776,7 @@ QCPRange QCPBars::getValueRange(bool &foundRange, QCP::SignDomain inSignDomain, 
   {
     const double current = it->value + getStackedBaseValue(it->key, it->value >= 0);
     if (qIsNaN(current)) continue;
-    if (inSignDomain == QCP::sdBoth || (inSignDomain == QCP::sdNegative && current < 0) || (inSignDomain == QCP::sdPositive && current > 0))
+    if (inSignDomain == Q_CP::sdBoth || (inSignDomain == Q_CP::sdNegative && current < 0) || (inSignDomain == Q_CP::sdPositive && current > 0))
     {
       if (current < range.lower || !haveLower)
       {
@@ -25494,7 +25494,7 @@ void QCPStatisticalBox::addData(double key, double minimum, double lowerQuartile
 QCPDataSelection QCPStatisticalBox::selectTestRect(const QRectF &rect, bool onlySelectable) const
 {
   QCPDataSelection result;
-  if ((onlySelectable && mSelectable == QCP::stNone) || mDataContainer->isEmpty())
+  if ((onlySelectable && mSelectable == Q_CP::stNone) || mDataContainer->isEmpty())
     return result;
   if (!mKeyAxis || !mValueAxis)
     return result;
@@ -25522,12 +25522,12 @@ QCPDataSelection QCPStatisticalBox::selectTestRect(const QRectF &rect, bool only
 double QCPStatisticalBox::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
   Q_UNUSED(details)
-  if ((onlySelectable && mSelectable == QCP::stNone) || mDataContainer->isEmpty())
+  if ((onlySelectable && mSelectable == Q_CP::stNone) || mDataContainer->isEmpty())
     return -1;
   if (!mKeyAxis || !mValueAxis)
     return -1;
   
-  if (mKeyAxis->axisRect()->rect().contains(pos.toPoint()) || mParentPlot->interactions().testFlag(QCP::iSelectPlottablesBeyondAxisRect))
+  if (mKeyAxis->axisRect()->rect().contains(pos.toPoint()) || mParentPlot->interactions().testFlag(Q_CP::iSelectPlottablesBeyondAxisRect))
   {
     // get visible data range:
     QCPStatisticalBoxDataContainer::const_iterator visibleBegin, visibleEnd;
@@ -25570,22 +25570,22 @@ double QCPStatisticalBox::selectTest(const QPointF &pos, bool onlySelectable, QV
 }
 
 /* inherits documentation from base class */
-QCPRange QCPStatisticalBox::getKeyRange(bool &foundRange, QCP::SignDomain inSignDomain) const
+QCPRange QCPStatisticalBox::getKeyRange(bool &foundRange, Q_CP::SignDomain inSignDomain) const
 {
   QCPRange range = mDataContainer->keyRange(foundRange, inSignDomain);
   // determine exact range by including width of bars/flags:
   if (foundRange)
   {
-    if (inSignDomain != QCP::sdPositive || range.lower-mWidth*0.5 > 0)
+    if (inSignDomain != Q_CP::sdPositive || range.lower-mWidth*0.5 > 0)
       range.lower -= mWidth*0.5;
-    if (inSignDomain != QCP::sdNegative || range.upper+mWidth*0.5 < 0)
+    if (inSignDomain != Q_CP::sdNegative || range.upper+mWidth*0.5 < 0)
       range.upper += mWidth*0.5;
   }
   return range;
 }
 
 /* inherits documentation from base class */
-QCPRange QCPStatisticalBox::getValueRange(bool &foundRange, QCP::SignDomain inSignDomain, const QCPRange &inKeyRange) const
+QCPRange QCPStatisticalBox::getValueRange(bool &foundRange, Q_CP::SignDomain inSignDomain, const QCPRange &inKeyRange) const
 {
   return mDataContainer->valueRange(foundRange, inSignDomain, inKeyRange);
 }
@@ -25681,7 +25681,7 @@ void QCPStatisticalBox::drawStatisticalBox(QCPPainter *painter, QCPStatisticalBo
   painter->drawLine(QLineF(coordsToPixels(it->key-mWidth*0.5, it->median), coordsToPixels(it->key+mWidth*0.5, it->median)));
   painter->restore();
   // draw whisker lines:
-  applyAntialiasingHint(painter, mWhiskerAntialiased, QCP::aePlottables);
+  applyAntialiasingHint(painter, mWhiskerAntialiased, Q_CP::aePlottables);
   painter->setPen(mWhiskerPen);
   painter->drawLines(getWhiskerBackboneLines(it));
   painter->setPen(mWhiskerBarPen);
@@ -26685,12 +26685,12 @@ void QCPColorMap::updateLegendIcon(Qt::TransformationMode transformMode, const Q
 double QCPColorMap::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
   Q_UNUSED(details)
-  if ((onlySelectable && mSelectable == QCP::stNone) || mMapData->isEmpty())
+  if ((onlySelectable && mSelectable == Q_CP::stNone) || mMapData->isEmpty())
     return -1;
   if (!mKeyAxis || !mValueAxis)
     return -1;
   
-  if (mKeyAxis.data()->axisRect()->rect().contains(pos.toPoint()) || mParentPlot->interactions().testFlag(QCP::iSelectPlottablesBeyondAxisRect))
+  if (mKeyAxis.data()->axisRect()->rect().contains(pos.toPoint()) || mParentPlot->interactions().testFlag(Q_CP::iSelectPlottablesBeyondAxisRect))
   {
     double posKey, posValue;
     pixelsToCoords(pos, posKey, posValue);
@@ -26705,18 +26705,18 @@ double QCPColorMap::selectTest(const QPointF &pos, bool onlySelectable, QVariant
 }
 
 /* inherits documentation from base class */
-QCPRange QCPColorMap::getKeyRange(bool &foundRange, QCP::SignDomain inSignDomain) const
+QCPRange QCPColorMap::getKeyRange(bool &foundRange, Q_CP::SignDomain inSignDomain) const
 {
   foundRange = true;
   QCPRange result = mMapData->keyRange();
   result.normalize();
-  if (inSignDomain == QCP::sdPositive)
+  if (inSignDomain == Q_CP::sdPositive)
   {
     if (result.lower <= 0 && result.upper > 0)
       result.lower = result.upper*1e-3;
     else if (result.lower <= 0 && result.upper <= 0)
       foundRange = false;
-  } else if (inSignDomain == QCP::sdNegative)
+  } else if (inSignDomain == Q_CP::sdNegative)
   {
     if (result.upper >= 0 && result.lower < 0)
       result.upper = result.lower*1e-3;
@@ -26727,7 +26727,7 @@ QCPRange QCPColorMap::getKeyRange(bool &foundRange, QCP::SignDomain inSignDomain
 }
 
 /* inherits documentation from base class */
-QCPRange QCPColorMap::getValueRange(bool &foundRange, QCP::SignDomain inSignDomain, const QCPRange &inKeyRange) const
+QCPRange QCPColorMap::getValueRange(bool &foundRange, Q_CP::SignDomain inSignDomain, const QCPRange &inKeyRange) const
 {
   if (inKeyRange != QCPRange())
   {
@@ -26741,13 +26741,13 @@ QCPRange QCPColorMap::getValueRange(bool &foundRange, QCP::SignDomain inSignDoma
   foundRange = true;
   QCPRange result = mMapData->valueRange();
   result.normalize();
-  if (inSignDomain == QCP::sdPositive)
+  if (inSignDomain == Q_CP::sdPositive)
   {
     if (result.lower <= 0 && result.upper > 0)
       result.lower = result.upper*1e-3;
     else if (result.lower <= 0 && result.upper <= 0)
       foundRange = false;
-  } else if (inSignDomain == QCP::sdNegative)
+  } else if (inSignDomain == Q_CP::sdNegative)
   {
     if (result.upper >= 0 && result.lower < 0)
       result.upper = result.lower*1e-3;
@@ -27328,7 +27328,7 @@ void QCPFinancial::addData(double key, double open, double high, double low, dou
 QCPDataSelection QCPFinancial::selectTestRect(const QRectF &rect, bool onlySelectable) const
 {
   QCPDataSelection result;
-  if ((onlySelectable && mSelectable == QCP::stNone) || mDataContainer->isEmpty())
+  if ((onlySelectable && mSelectable == Q_CP::stNone) || mDataContainer->isEmpty())
     return result;
   if (!mKeyAxis || !mValueAxis)
     return result;
@@ -27356,12 +27356,12 @@ QCPDataSelection QCPFinancial::selectTestRect(const QRectF &rect, bool onlySelec
 double QCPFinancial::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
   Q_UNUSED(details)
-  if ((onlySelectable && mSelectable == QCP::stNone) || mDataContainer->isEmpty())
+  if ((onlySelectable && mSelectable == Q_CP::stNone) || mDataContainer->isEmpty())
     return -1;
   if (!mKeyAxis || !mValueAxis)
     return -1;
   
-  if (mKeyAxis.data()->axisRect()->rect().contains(pos.toPoint()) || mParentPlot->interactions().testFlag(QCP::iSelectPlottablesBeyondAxisRect))
+  if (mKeyAxis.data()->axisRect()->rect().contains(pos.toPoint()) || mParentPlot->interactions().testFlag(Q_CP::iSelectPlottablesBeyondAxisRect))
   {
     // get visible data range:
     QCPFinancialDataContainer::const_iterator visibleBegin, visibleEnd;
@@ -27388,22 +27388,22 @@ double QCPFinancial::selectTest(const QPointF &pos, bool onlySelectable, QVarian
 }
 
 /* inherits documentation from base class */
-QCPRange QCPFinancial::getKeyRange(bool &foundRange, QCP::SignDomain inSignDomain) const
+QCPRange QCPFinancial::getKeyRange(bool &foundRange, Q_CP::SignDomain inSignDomain) const
 {
   QCPRange range = mDataContainer->keyRange(foundRange, inSignDomain);
   // determine exact range by including width of bars/flags:
   if (foundRange)
   {
-    if (inSignDomain != QCP::sdPositive || range.lower-mWidth*0.5 > 0)
+    if (inSignDomain != Q_CP::sdPositive || range.lower-mWidth*0.5 > 0)
       range.lower -= mWidth*0.5;
-    if (inSignDomain != QCP::sdNegative || range.upper+mWidth*0.5 < 0)
+    if (inSignDomain != Q_CP::sdNegative || range.upper+mWidth*0.5 < 0)
       range.upper += mWidth*0.5;
   }
   return range;
 }
 
 /* inherits documentation from base class */
-QCPRange QCPFinancial::getValueRange(bool &foundRange, QCP::SignDomain inSignDomain, const QCPRange &inKeyRange) const
+QCPRange QCPFinancial::getValueRange(bool &foundRange, Q_CP::SignDomain inSignDomain, const QCPRange &inKeyRange) const
 {
   return mDataContainer->valueRange(foundRange, inSignDomain, inKeyRange);
 }
@@ -28285,7 +28285,7 @@ QCPDataSelection QCPErrorBars::selectTestRect(const QRectF &rect, bool onlySelec
   QCPDataSelection result;
   if (!mDataPlottable)
     return result;
-  if ((onlySelectable && mSelectable == QCP::stNone) || mDataContainer->isEmpty())
+  if ((onlySelectable && mSelectable == Q_CP::stNone) || mDataContainer->isEmpty())
     return result;
   if (!mKeyAxis || !mValueAxis)
     return result;
@@ -28356,12 +28356,12 @@ double QCPErrorBars::selectTest(const QPointF &pos, bool onlySelectable, QVarian
 {
   if (!mDataPlottable) return -1;
   
-  if ((onlySelectable && mSelectable == QCP::stNone) || mDataContainer->isEmpty())
+  if ((onlySelectable && mSelectable == Q_CP::stNone) || mDataContainer->isEmpty())
     return -1;
   if (!mKeyAxis || !mValueAxis)
     return -1;
   
-  if (mKeyAxis.data()->axisRect()->rect().contains(pos.toPoint()) || mParentPlot->interactions().testFlag(QCP::iSelectPlottablesBeyondAxisRect))
+  if (mKeyAxis.data()->axisRect()->rect().contains(pos.toPoint()) || mParentPlot->interactions().testFlag(Q_CP::iSelectPlottablesBeyondAxisRect))
   {
     QCPErrorBarsDataContainer::const_iterator closestDataPoint = mDataContainer->constEnd();
     double result = pointDistance(pos, closestDataPoint);
@@ -28456,7 +28456,7 @@ void QCPErrorBars::drawLegendIcon(QCPPainter *painter, const QRectF &rect) const
 }
 
 /* inherits documentation from base class */
-QCPRange QCPErrorBars::getKeyRange(bool &foundRange, QCP::SignDomain inSignDomain) const
+QCPRange QCPErrorBars::getKeyRange(bool &foundRange, Q_CP::SignDomain inSignDomain) const
 {
   if (!mDataPlottable)
   {
@@ -28475,7 +28475,7 @@ QCPRange QCPErrorBars::getKeyRange(bool &foundRange, QCP::SignDomain inSignDomai
       // error bar doesn't extend in key dimension (except whisker but we ignore that here), so only use data point center
       const double current = mDataPlottable->interface1D()->dataMainKey(int(it-mDataContainer->constBegin()));
       if (qIsNaN(current)) continue;
-      if (inSignDomain == QCP::sdBoth || (inSignDomain == QCP::sdNegative && current < 0) || (inSignDomain == QCP::sdPositive && current > 0))
+      if (inSignDomain == Q_CP::sdBoth || (inSignDomain == Q_CP::sdNegative && current < 0) || (inSignDomain == Q_CP::sdPositive && current > 0))
       {
         if (current < range.lower || !haveLower)
         {
@@ -28494,7 +28494,7 @@ QCPRange QCPErrorBars::getKeyRange(bool &foundRange, QCP::SignDomain inSignDomai
       if (qIsNaN(dataKey)) continue;
       // plus error:
       double current = dataKey + (qIsNaN(it->errorPlus) ? 0 : it->errorPlus);
-      if (inSignDomain == QCP::sdBoth || (inSignDomain == QCP::sdNegative && current < 0) || (inSignDomain == QCP::sdPositive && current > 0))
+      if (inSignDomain == Q_CP::sdBoth || (inSignDomain == Q_CP::sdNegative && current < 0) || (inSignDomain == Q_CP::sdPositive && current > 0))
       {
         if (current > range.upper || !haveUpper)
         {
@@ -28504,7 +28504,7 @@ QCPRange QCPErrorBars::getKeyRange(bool &foundRange, QCP::SignDomain inSignDomai
       }
       // minus error:
       current = dataKey - (qIsNaN(it->errorMinus) ? 0 : it->errorMinus);
-      if (inSignDomain == QCP::sdBoth || (inSignDomain == QCP::sdNegative && current < 0) || (inSignDomain == QCP::sdPositive && current > 0))
+      if (inSignDomain == Q_CP::sdBoth || (inSignDomain == Q_CP::sdNegative && current < 0) || (inSignDomain == Q_CP::sdPositive && current > 0))
       {
         if (current < range.lower || !haveLower)
         {
@@ -28530,7 +28530,7 @@ QCPRange QCPErrorBars::getKeyRange(bool &foundRange, QCP::SignDomain inSignDomai
 }
 
 /* inherits documentation from base class */
-QCPRange QCPErrorBars::getValueRange(bool &foundRange, QCP::SignDomain inSignDomain, const QCPRange &inKeyRange) const
+QCPRange QCPErrorBars::getValueRange(bool &foundRange, Q_CP::SignDomain inSignDomain, const QCPRange &inKeyRange) const
 {
   if (!mDataPlottable)
   {
@@ -28563,7 +28563,7 @@ QCPRange QCPErrorBars::getValueRange(bool &foundRange, QCP::SignDomain inSignDom
       if (qIsNaN(dataValue)) continue;
       // plus error:
       double current = dataValue + (qIsNaN(it->errorPlus) ? 0 : it->errorPlus);
-      if (inSignDomain == QCP::sdBoth || (inSignDomain == QCP::sdNegative && current < 0) || (inSignDomain == QCP::sdPositive && current > 0))
+      if (inSignDomain == Q_CP::sdBoth || (inSignDomain == Q_CP::sdNegative && current < 0) || (inSignDomain == Q_CP::sdPositive && current > 0))
       {
         if (current > range.upper || !haveUpper)
         {
@@ -28573,7 +28573,7 @@ QCPRange QCPErrorBars::getValueRange(bool &foundRange, QCP::SignDomain inSignDom
       }
       // minus error:
       current = dataValue - (qIsNaN(it->errorMinus) ? 0 : it->errorMinus);
-      if (inSignDomain == QCP::sdBoth || (inSignDomain == QCP::sdNegative && current < 0) || (inSignDomain == QCP::sdPositive && current > 0))
+      if (inSignDomain == Q_CP::sdBoth || (inSignDomain == Q_CP::sdNegative && current < 0) || (inSignDomain == Q_CP::sdPositive && current > 0))
       {
         if (current < range.lower || !haveLower)
         {
@@ -28586,7 +28586,7 @@ QCPRange QCPErrorBars::getValueRange(bool &foundRange, QCP::SignDomain inSignDom
       // error bar doesn't extend in value dimension (except whisker but we ignore that here), so only use data point center
       const double current = mDataPlottable->interface1D()->dataMainValue(int(it-mDataContainer->constBegin()));
       if (qIsNaN(current)) continue;
-      if (inSignDomain == QCP::sdBoth || (inSignDomain == QCP::sdNegative && current < 0) || (inSignDomain == QCP::sdPositive && current > 0))
+      if (inSignDomain == Q_CP::sdBoth || (inSignDomain == Q_CP::sdNegative && current < 0) || (inSignDomain == Q_CP::sdPositive && current > 0))
       {
         if (current < range.lower || !haveLower)
         {
@@ -28799,7 +28799,7 @@ void QCPErrorBars::getDataSegments(QList<QCPDataRange> &selectedSegments, QList<
 {
   selectedSegments.clear();
   unselectedSegments.clear();
-  if (mSelectable == QCP::stWhole) // stWhole selection type draws the entire plottable with selected style if mSelection isn't empty
+  if (mSelectable == Q_CP::stWhole) // stWhole selection type draws the entire plottable with selected style if mSelection isn't empty
   {
     if (selected())
       selectedSegments << QCPDataRange(0, dataCount());
@@ -32199,7 +32199,7 @@ void QCPPolarAxisRadial::deselectEvent(bool *selectionStateChanged)
 void QCPPolarAxisRadial::mousePressEvent(QMouseEvent *event, const QVariant &details)
 {
   Q_UNUSED(details)
-  if (!mParentPlot->interactions().testFlag(QCP::iRangeDrag))
+  if (!mParentPlot->interactions().testFlag(Q_CP::iRangeDrag))
   {
     event->ignore();
     return;
@@ -32215,7 +32215,7 @@ void QCPPolarAxisRadial::mousePressEvent(QMouseEvent *event, const QVariant &det
       mNotAADragBackup = mParentPlot->notAntialiasedElements();
     }
     // Mouse range dragging interaction:
-    if (mParentPlot->interactions().testFlag(QCP::iRangeDrag))
+    if (mParentPlot->interactions().testFlag(Q_CP::iRangeDrag))
       mDragStartRange = mRange;
   }
 }
@@ -32253,7 +32253,7 @@ void QCPPolarAxisRadial::mouseMoveEvent(QMouseEvent *event, const QPointF &start
     */
     
     if (mParentPlot->noAntialiasingOnDrag())
-      mParentPlot->setNotAntialiasedElements(QCP::aeAll);
+      mParentPlot->setNotAntialiasedElements(Q_CP::aeAll);
     mParentPlot->replot(QCustomPlot::rpQueuedReplot);
   }
 }
@@ -32300,7 +32300,7 @@ void QCPPolarAxisRadial::mouseReleaseEvent(QMouseEvent *event, const QPointF &st
 void QCPPolarAxisRadial::wheelEvent(QWheelEvent *event)
 {
   // Mouse range zooming interaction:
-  if (!mParentPlot->interactions().testFlag(QCP::iRangeZoom))
+  if (!mParentPlot->interactions().testFlag(Q_CP::iRangeZoom))
   {
     event->ignore();
     return;
@@ -32337,7 +32337,7 @@ void QCPPolarAxisRadial::updateGeometry(const QPointF &center, double radius)
 */
 void QCPPolarAxisRadial::applyDefaultAntialiasingHint(QCPPainter *painter) const
 {
-  applyAntialiasingHint(painter, mAntialiased, QCP::aeAxes);
+  applyAntialiasingHint(painter, mAntialiased, Q_CP::aeAxes);
 }
 
 /*! \internal
@@ -32479,9 +32479,9 @@ QColor QCPPolarAxisRadial::getLabelColor() const
 
 
 /* inherits documentation from base class */
-QCP::Interaction QCPPolarAxisRadial::selectionCategory() const
+Q_CP::Interaction QCPPolarAxisRadial::selectionCategory() const
 {
-  return QCP::iSelectAxes;
+  return Q_CP::iSelectAxes;
 }
 /* end of 'src/polar/radialaxis.cpp' */
 
@@ -32887,9 +32887,9 @@ void QCPPolarAxisAngular::rescale(bool onlyVisiblePlottables)
     QCPRange range;
     bool currentFoundRange;
     if (mGraphs.at(i)->keyAxis() == this)
-      range = mGraphs.at(i)->getKeyRange(currentFoundRange, QCP::sdBoth);
+      range = mGraphs.at(i)->getKeyRange(currentFoundRange, Q_CP::sdBoth);
     else
-      range = mGraphs.at(i)->getValueRange(currentFoundRange, QCP::sdBoth);
+      range = mGraphs.at(i)->getValueRange(currentFoundRange, Q_CP::sdBoth);
     if (currentFoundRange)
     {
       if (!haveRange)
@@ -33070,7 +33070,7 @@ bool QCPPolarAxisAngular::removeGraph(QCPPolarGraph *graph)
 /* inherits documentation from base class */
 void QCPPolarAxisAngular::applyDefaultAntialiasingHint(QCPPainter *painter) const
 {
-  applyAntialiasingHint(painter, mAntialiased, QCP::aeAxes);
+  applyAntialiasingHint(painter, mAntialiased, Q_CP::aeAxes);
 }
 
 /* inherits documentation from base class */
@@ -33116,9 +33116,9 @@ void QCPPolarAxisAngular::draw(QCPPainter *painter)
 }
 
 /* inherits documentation from base class */
-QCP::Interaction QCPPolarAxisAngular::selectionCategory() const
+Q_CP::Interaction QCPPolarAxisAngular::selectionCategory() const
 {
-  return QCP::iSelectAxes;
+  return Q_CP::iSelectAxes;
 }
 
 
@@ -34018,7 +34018,7 @@ void QCPPolarAxisAngular::mousePressEvent(QMouseEvent *event, const QVariant &de
       mNotAADragBackup = mParentPlot->notAntialiasedElements();
     }
     // Mouse range dragging interaction:
-    if (mParentPlot->interactions().testFlag(QCP::iRangeDrag))
+    if (mParentPlot->interactions().testFlag(Q_CP::iRangeDrag))
     {
       mDragAngularStart = range();
       mDragRadialStart.clear();
@@ -34040,7 +34040,7 @@ void QCPPolarAxisAngular::mouseMoveEvent(QMouseEvent *event, const QPointF &star
   Q_UNUSED(startPos)
   bool doReplot = false;
   // Mouse range dragging interaction:
-  if (mDragging && mParentPlot->interactions().testFlag(QCP::iRangeDrag))
+  if (mDragging && mParentPlot->interactions().testFlag(Q_CP::iRangeDrag))
   {
     if (mRangeDrag)
     {
@@ -34080,7 +34080,7 @@ void QCPPolarAxisAngular::mouseMoveEvent(QMouseEvent *event, const QPointF &star
     if (doReplot) // if either vertical or horizontal drag was enabled, do a replot
     {
       if (mParentPlot->noAntialiasingOnDrag())
-        mParentPlot->setNotAntialiasedElements(QCP::aeAll);
+        mParentPlot->setNotAntialiasedElements(Q_CP::aeAll);
       mParentPlot->replot(QCustomPlot::rpQueuedReplot);
     }
   }
@@ -34117,7 +34117,7 @@ void QCPPolarAxisAngular::wheelEvent(QWheelEvent *event)
 {
   bool doReplot = false;
   // Mouse range zooming interaction:
-  if (mParentPlot->interactions().testFlag(QCP::iRangeZoom))
+  if (mParentPlot->interactions().testFlag(Q_CP::iRangeZoom))
   {
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     const double delta = event->delta();
@@ -34297,7 +34297,7 @@ void QCPPolarGrid::setRadialZeroLinePen(const QPen &pen)
 */
 void QCPPolarGrid::applyDefaultAntialiasingHint(QCPPainter *painter) const
 {
-  applyAntialiasingHint(painter, mAntialiased, QCP::aeGrid);
+  applyAntialiasingHint(painter, mAntialiased, Q_CP::aeGrid);
 }
 
 /*! \internal
@@ -34320,7 +34320,7 @@ void QCPPolarGrid::draw(QCPPainter *painter)
   if (mType.testFlag(gtRadial) && mRadialAxis)
     drawRadialGrid(painter, center, mRadialAxis->tickVector(), mRadialPen, mRadialZeroLinePen);
   
-  applyAntialiasingHint(painter, mAntialiasedSubGrid, QCP::aeGrid);
+  applyAntialiasingHint(painter, mAntialiasedSubGrid, Q_CP::aeGrid);
   // draw sub angular grid:
   if (mSubGridType.testFlag(gtAngular))
     drawAngularGrid(painter, center, radius, mParentAxis->mSubTickVectorCosSin, mAngularSubGridPen);
@@ -34342,7 +34342,7 @@ void QCPPolarGrid::drawRadialGrid(QCPPainter *painter, const QPointF &center, co
     const double r = mRadialAxis->coordToRadius(coords.at(i));
     if (drawZeroLine && qAbs(coords.at(i)) < zeroLineEpsilon)
     {
-      applyAntialiasingHint(painter, mAntialiasedZeroLine, QCP::aeZeroLine);
+      applyAntialiasingHint(painter, mAntialiasedZeroLine, Q_CP::aeZeroLine);
       painter->setPen(zeroPen);
       painter->drawEllipse(center, r, r);
       painter->setPen(pen);
@@ -34484,7 +34484,7 @@ QCPPolarGraph::QCPPolarGraph(QCPPolarAxisAngular *keyAxis, QCPPolarAxisRadial *v
   mPeriodic(true),
   mKeyAxis(keyAxis),
   mValueAxis(valueAxis),
-  mSelectable(QCP::stWhole)
+  mSelectable(Q_CP::stWhole)
   //mSelectionDecorator(0) // TODO
 {
   if (keyAxis->parentPlot() != valueAxis->parentPlot())
@@ -34615,7 +34615,7 @@ void QCPPolarGraph::setValueAxis(QCPPolarAxisRadial *axis)
   
   \see setSelection, QCP::SelectionType
 */
-void QCPPolarGraph::setSelectable(QCP::SelectionType selectable)
+void QCPPolarGraph::setSelectable(Q_CP::SelectionType selectable)
 {
   if (mSelectable != selectable)
   {
@@ -34830,7 +34830,7 @@ void QCPPolarGraph::rescaleKeyAxis(bool onlyEnlarge) const
   if (!keyAxis) { qDebug() << Q_FUNC_INFO << "invalid key axis"; return; }
   
   bool foundRange;
-  QCPRange newRange = getKeyRange(foundRange, QCP::sdBoth);
+  QCPRange newRange = getKeyRange(foundRange, Q_CP::sdBoth);
   if (foundRange)
   {
     if (onlyEnlarge)
@@ -34851,9 +34851,9 @@ void QCPPolarGraph::rescaleValueAxis(bool onlyEnlarge, bool inKeyRange) const
   QCPPolarAxisRadial *valueAxis = mValueAxis.data();
   if (!keyAxis || !valueAxis) { qDebug() << Q_FUNC_INFO << "invalid key or value axis"; return; }
   
-  QCP::SignDomain signDomain = QCP::sdBoth;
+  Q_CP::SignDomain signDomain = Q_CP::sdBoth;
   if (valueAxis->scaleType() == QCPPolarAxisRadial::stLogarithmic)
-    signDomain = (valueAxis->range().upper < 0 ? QCP::sdNegative : QCP::sdPositive);
+    signDomain = (valueAxis->range().upper < 0 ? Q_CP::sdNegative : Q_CP::sdPositive);
   
   bool foundRange;
   QCPRange newRange = getValueRange(foundRange, signDomain, inKeyRange ? keyAxis->range() : QCPRange());
@@ -34945,7 +34945,7 @@ bool QCPPolarGraph::removeFromLegend() const
 
 double QCPPolarGraph::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
-  if ((onlySelectable && mSelectable == QCP::stNone) || mDataContainer->isEmpty())
+  if ((onlySelectable && mSelectable == Q_CP::stNone) || mDataContainer->isEmpty())
     return -1;
   if (!mKeyAxis || !mValueAxis)
     return -1;
@@ -34965,13 +34965,13 @@ double QCPPolarGraph::selectTest(const QPointF &pos, bool onlySelectable, QVaria
 }
 
 /* inherits documentation from base class */
-QCPRange QCPPolarGraph::getKeyRange(bool &foundRange, QCP::SignDomain inSignDomain) const
+QCPRange QCPPolarGraph::getKeyRange(bool &foundRange, Q_CP::SignDomain inSignDomain) const
 {
   return mDataContainer->keyRange(foundRange, inSignDomain);
 }
 
 /* inherits documentation from base class */
-QCPRange QCPPolarGraph::getValueRange(bool &foundRange, QCP::SignDomain inSignDomain, const QCPRange &inKeyRange) const
+QCPRange QCPPolarGraph::getValueRange(bool &foundRange, Q_CP::SignDomain inSignDomain, const QCPRange &inKeyRange) const
 {
   return mDataContainer->valueRange(foundRange, inSignDomain, inKeyRange);
 }
@@ -35053,14 +35053,14 @@ void QCPPolarGraph::draw(QCPPainter *painter)
   //  mSelectionDecorator->drawDecoration(painter, selection());
 }
 
-QCP::Interaction QCPPolarGraph::selectionCategory() const
+Q_CP::Interaction QCPPolarGraph::selectionCategory() const
 {
-  return QCP::iSelectPlottables;
+  return Q_CP::iSelectPlottables;
 }
 
 void QCPPolarGraph::applyDefaultAntialiasingHint(QCPPainter *painter) const
 {
-  applyAntialiasingHint(painter, mAntialiased, QCP::aePlottables);
+  applyAntialiasingHint(painter, mAntialiased, Q_CP::aePlottables);
 }
 
 /* inherits documentation from base class */
@@ -35068,13 +35068,13 @@ void QCPPolarGraph::selectEvent(QMouseEvent *event, bool additive, const QVarian
 {
   Q_UNUSED(event)
   
-  if (mSelectable != QCP::stNone)
+  if (mSelectable != Q_CP::stNone)
   {
     QCPDataSelection newSelection = details.value<QCPDataSelection>();
     QCPDataSelection selectionBefore = mSelection;
     if (additive)
     {
-      if (mSelectable == QCP::stWhole) // in whole selection mode, we toggle to no selection even if currently unselected point was hit
+      if (mSelectable == Q_CP::stWhole) // in whole selection mode, we toggle to no selection even if currently unselected point was hit
       {
         if (selected())
           setSelection(QCPDataSelection());
@@ -35097,7 +35097,7 @@ void QCPPolarGraph::selectEvent(QMouseEvent *event, bool additive, const QVarian
 /* inherits documentation from base class */
 void QCPPolarGraph::deselectEvent(bool *selectionStateChanged)
 {
-  if (mSelectable != QCP::stNone)
+  if (mSelectable != Q_CP::stNone)
   {
     QCPDataSelection selectionBefore = mSelection;
     setSelection(QCPDataSelection());
@@ -35196,12 +35196,12 @@ void QCPPolarGraph::drawLegendIcon(QCPPainter *painter, const QRectF &rect) cons
 
 void QCPPolarGraph::applyFillAntialiasingHint(QCPPainter *painter) const
 {
-  applyAntialiasingHint(painter, mAntialiasedFill, QCP::aeFills);
+  applyAntialiasingHint(painter, mAntialiasedFill, Q_CP::aeFills);
 }
 
 void QCPPolarGraph::applyScattersAntialiasingHint(QCPPainter *painter) const
 {
-  applyAntialiasingHint(painter, mAntialiasedScatters, QCP::aeScatters);
+  applyAntialiasingHint(painter, mAntialiasedScatters, Q_CP::aeScatters);
 }
 
 double QCPPolarGraph::pointDistance(const QPointF &pixelPoint, QCPGraphDataContainer::const_iterator &closestData) const
@@ -35260,7 +35260,7 @@ void QCPPolarGraph::getDataSegments(QList<QCPDataRange> &selectedSegments, QList
 {
   selectedSegments.clear();
   unselectedSegments.clear();
-  if (mSelectable == QCP::stWhole) // stWhole selection type draws the entire plottable with selected style if mSelection isn't empty
+  if (mSelectable == Q_CP::stWhole) // stWhole selection type draws the entire plottable with selected style if mSelection isn't empty
   {
     if (selected())
       selectedSegments << QCPDataRange(0, dataCount());
@@ -35278,7 +35278,7 @@ void QCPPolarGraph::getDataSegments(QList<QCPDataRange> &selectedSegments, QList
 void QCPPolarGraph::drawPolyline(QCPPainter *painter, const QVector<QPointF> &lineData) const
 {
   // if drawing solid line and not in PDF, use much faster line drawing instead of polyline:
-  if (mParentPlot->plottingHints().testFlag(QCP::phFastPolylines) &&
+  if (mParentPlot->plottingHints().testFlag(Q_CP::phFastPolylines) &&
       painter->pen().style() == Qt::SolidLine &&
       !painter->modes().testFlag(QCPPainter::pmVectorized) &&
       !painter->modes().testFlag(QCPPainter::pmNoCaching))

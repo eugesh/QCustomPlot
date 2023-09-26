@@ -8,8 +8,8 @@ MainWindow::MainWindow(QWidget *parent) :
   std::srand(QDateTime::currentDateTime().toMSecsSinceEpoch()/1000.0);
   ui->setupUi(this);
   
-  ui->customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectAxes |
-                                  QCP::iSelectLegend | QCP::iSelectPlottables);
+  ui->customPlot->setInteractions(Q_CP::iRangeDrag | Q_CP::iRangeZoom | Q_CP::iSelectAxes |
+                                  Q_CP::iSelectLegend | Q_CP::iSelectPlottables);
   ui->customPlot->xAxis->setRange(-8, 8);
   ui->customPlot->yAxis->setRange(-5, 5);
   ui->customPlot->axisRect()->setupFullAxesBox();

@@ -156,10 +156,10 @@ class QCPPolarGraph;
   
   It provides QMetaObject-based reflection of its enums and flags via \a QCP::staticMetaObject.
 */
-#ifndef Q_MOC_RUN
-namespace QCP {
-#else
-class QCP { // when in moc-run, make it look like a class, so we get Q_GADGET, Q_ENUMS/Q_FLAGS features in namespace
+//#ifndef Q_MOC_RUN
+namespace Q_CP {
+/*#else
+class Q_CP { // when in moc-run, make it look like a class, so we get Q_GADGET, Q_ENUMS/Q_FLAGS features in namespace
   Q_GADGET
   Q_ENUMS(ExportPen)
   Q_ENUMS(ResolutionUnit)
@@ -175,7 +175,7 @@ class QCP { // when in moc-run, make it look like a class, so we get Q_GADGET, Q
   Q_ENUMS(SelectionRectMode)
   Q_ENUMS(SelectionType)
 public:
-#endif
+#endif*/
 
 /*!
   Defines the different units in which the image resolution can be specified in the export
@@ -345,15 +345,15 @@ inline bool isInvalidData(double value1, double value2)
   
   \see getMarginValue
 */
-inline void setMarginValue(QMargins &margins, QCP::MarginSide side, int value)
+inline void setMarginValue(QMargins &margins, Q_CP::MarginSide side, int value)
 {
   switch (side)
   {
-    case QCP::msLeft: margins.setLeft(value); break;
-    case QCP::msRight: margins.setRight(value); break;
-    case QCP::msTop: margins.setTop(value); break;
-    case QCP::msBottom: margins.setBottom(value); break;
-    case QCP::msAll: margins = QMargins(value, value, value, value); break;
+    case Q_CP::msLeft: margins.setLeft(value); break;
+    case Q_CP::msRight: margins.setRight(value); break;
+    case Q_CP::msTop: margins.setTop(value); break;
+    case Q_CP::msBottom: margins.setBottom(value); break;
+    case Q_CP::msAll: margins = QMargins(value, value, value, value); break;
     default: break;
   }
 }
@@ -365,14 +365,14 @@ inline void setMarginValue(QMargins &margins, QCP::MarginSide side, int value)
   
   \see setMarginValue
 */
-inline int getMarginValue(const QMargins &margins, QCP::MarginSide side)
+inline int getMarginValue(const QMargins &margins, Q_CP::MarginSide side)
 {
   switch (side)
   {
-    case QCP::msLeft: return margins.left();
-    case QCP::msRight: return margins.right();
-    case QCP::msTop: return margins.top();
-    case QCP::msBottom: return margins.bottom();
+    case Q_CP::msLeft: return margins.left();
+    case Q_CP::msRight: return margins.right();
+    case Q_CP::msTop: return margins.top();
+    case Q_CP::msBottom: return margins.bottom();
     default: break;
   }
   return 0;
@@ -382,19 +382,19 @@ inline int getMarginValue(const QMargins &margins, QCP::MarginSide side)
 extern const QMetaObject staticMetaObject; // in moc-run we create a static meta object for QCP "fake" object. This line is the link to it via QCP::staticMetaObject in normal operation as namespace
 
 } // end of namespace QCP
-Q_DECLARE_OPERATORS_FOR_FLAGS(QCP::AntialiasedElements)
-Q_DECLARE_OPERATORS_FOR_FLAGS(QCP::PlottingHints)
-Q_DECLARE_OPERATORS_FOR_FLAGS(QCP::MarginSides)
-Q_DECLARE_OPERATORS_FOR_FLAGS(QCP::Interactions)
-Q_DECLARE_METATYPE(QCP::ExportPen)
-Q_DECLARE_METATYPE(QCP::ResolutionUnit)
-Q_DECLARE_METATYPE(QCP::SignDomain)
-Q_DECLARE_METATYPE(QCP::MarginSide)
-Q_DECLARE_METATYPE(QCP::AntialiasedElement)
-Q_DECLARE_METATYPE(QCP::PlottingHint)
-Q_DECLARE_METATYPE(QCP::Interaction)
-Q_DECLARE_METATYPE(QCP::SelectionRectMode)
-Q_DECLARE_METATYPE(QCP::SelectionType)
+Q_DECLARE_OPERATORS_FOR_FLAGS(Q_CP::AntialiasedElements)
+Q_DECLARE_OPERATORS_FOR_FLAGS(Q_CP::PlottingHints)
+Q_DECLARE_OPERATORS_FOR_FLAGS(Q_CP::MarginSides)
+Q_DECLARE_OPERATORS_FOR_FLAGS(Q_CP::Interactions)
+Q_DECLARE_METATYPE(Q_CP::ExportPen)
+Q_DECLARE_METATYPE(Q_CP::ResolutionUnit)
+Q_DECLARE_METATYPE(Q_CP::SignDomain)
+Q_DECLARE_METATYPE(Q_CP::MarginSide)
+Q_DECLARE_METATYPE(Q_CP::AntialiasedElement)
+Q_DECLARE_METATYPE(Q_CP::PlottingHint)
+Q_DECLARE_METATYPE(Q_CP::Interaction)
+Q_DECLARE_METATYPE(Q_CP::SelectionRectMode)
+Q_DECLARE_METATYPE(Q_CP::SelectionType)
 
 /* end of 'src/global.h' */
 
@@ -759,7 +759,7 @@ protected:
   
   // introduced virtual methods:
   virtual void parentPlotInitialized(QCustomPlot *parentPlot);
-  virtual QCP::Interaction selectionCategory() const;
+  virtual Q_CP::Interaction selectionCategory() const;
   virtual QRect clipRect() const;
   virtual void applyDefaultAntialiasingHint(QCPPainter *painter) const = 0;
   virtual void draw(QCPPainter *painter) = 0;
@@ -777,7 +777,7 @@ protected:
   void initializeParentPlot(QCustomPlot *parentPlot);
   void setParentLayerable(QCPLayerable* parentLayerable);
   bool moveToLayer(QCPLayer *layer, bool prepend);
-  void applyAntialiasingHint(QCPPainter *painter, bool localAntialiased, QCP::AntialiasedElement overrideElement) const;
+  void applyAntialiasingHint(QCPPainter *painter, bool localAntialiased, Q_CP::AntialiasedElement overrideElement) const;
   
 private:
   Q_DISABLE_COPY(QCPLayerable)
@@ -981,7 +981,7 @@ public:
   void clear();
   bool isEmpty() const { return mDataRanges.isEmpty(); }
   void simplify();
-  void enforceType(QCP::SelectionType type);
+  void enforceType(Q_CP::SelectionType type);
   bool contains(const QCPDataSelection &other) const;
   QCPDataSelection intersection(const QCPDataRange &other) const;
   QCPDataSelection intersection(const QCPDataSelection &other) const;
@@ -1177,21 +1177,21 @@ public:
   virtual ~QCPMarginGroup();
   
   // non-virtual methods:
-  QList<QCPLayoutElement*> elements(QCP::MarginSide side) const { return mChildren.value(side); }
+  QList<QCPLayoutElement*> elements(Q_CP::MarginSide side) const { return mChildren.value(side); }
   bool isEmpty() const;
   void clear();
   
 protected:
   // non-property members:
   QCustomPlot *mParentPlot;
-  QHash<QCP::MarginSide, QList<QCPLayoutElement*> > mChildren;
+  QHash<Q_CP::MarginSide, QList<QCPLayoutElement*> > mChildren;
   
   // introduced virtual methods:
-  virtual int commonMargin(QCP::MarginSide side) const;
+  virtual int commonMargin(Q_CP::MarginSide side) const;
   
   // non-virtual methods:
-  void addChild(QCP::MarginSide side, QCPLayoutElement *element);
-  void removeChild(QCP::MarginSide side, QCPLayoutElement *element);
+  void addChild(Q_CP::MarginSide side, QCPLayoutElement *element);
+  void removeChild(Q_CP::MarginSide side, QCPLayoutElement *element);
   
 private:
   Q_DISABLE_COPY(QCPMarginGroup)
@@ -1246,24 +1246,24 @@ public:
   QRect outerRect() const { return mOuterRect; }
   QMargins margins() const { return mMargins; }
   QMargins minimumMargins() const { return mMinimumMargins; }
-  QCP::MarginSides autoMargins() const { return mAutoMargins; }
+  Q_CP::MarginSides autoMargins() const { return mAutoMargins; }
   QSize minimumSize() const { return mMinimumSize; }
   QSize maximumSize() const { return mMaximumSize; }
   SizeConstraintRect sizeConstraintRect() const { return mSizeConstraintRect; }
-  QCPMarginGroup *marginGroup(QCP::MarginSide side) const { return mMarginGroups.value(side, nullptr); }
-  QHash<QCP::MarginSide, QCPMarginGroup*> marginGroups() const { return mMarginGroups; }
+  QCPMarginGroup *marginGroup(Q_CP::MarginSide side) const { return mMarginGroups.value(side, nullptr); }
+  QHash<Q_CP::MarginSide, QCPMarginGroup*> marginGroups() const { return mMarginGroups; }
   
   // setters:
   void setOuterRect(const QRect &rect);
   void setMargins(const QMargins &margins);
   void setMinimumMargins(const QMargins &margins);
-  void setAutoMargins(QCP::MarginSides sides);
+  void setAutoMargins(Q_CP::MarginSides sides);
   void setMinimumSize(const QSize &size);
   void setMinimumSize(int width, int height);
   void setMaximumSize(const QSize &size);
   void setMaximumSize(int width, int height);
   void setSizeConstraintRect(SizeConstraintRect constraintRect);
-  void setMarginGroup(QCP::MarginSides sides, QCPMarginGroup *group);
+  void setMarginGroup(Q_CP::MarginSides sides, QCPMarginGroup *group);
   
   // introduced virtual methods:
   virtual void update(UpdatePhase phase);
@@ -1281,11 +1281,11 @@ protected:
   SizeConstraintRect mSizeConstraintRect;
   QRect mRect, mOuterRect;
   QMargins mMargins, mMinimumMargins;
-  QCP::MarginSides mAutoMargins;
-  QHash<QCP::MarginSide, QCPMarginGroup*> mMarginGroups;
+  Q_CP::MarginSides mAutoMargins;
+  QHash<Q_CP::MarginSide, QCPMarginGroup*> mMarginGroups;
   
   // introduced virtual methods:
-  virtual int calculateAutoMargin(QCP::MarginSide side);
+  virtual int calculateAutoMargin(Q_CP::MarginSide side);
   virtual void layoutChanged();
   
   // reimplemented virtual methods:
@@ -2286,7 +2286,7 @@ public:
   QList<QCPGraph*> graphs() const;
   QList<QCPAbstractItem*> items() const;
   
-  static AxisType marginSideToAxisType(QCP::MarginSide side);
+  static AxisType marginSideToAxisType(Q_CP::MarginSide side);
   static Qt::Orientation orientation(AxisType type) { return type==atBottom || type==atTop ? Qt::Horizontal : Qt::Vertical; }
   static AxisType opposite(AxisType type);
   
@@ -2345,7 +2345,7 @@ protected:
   int mCachedMargin;
   bool mDragging;
   QCPRange mDragStartRange;
-  QCP::AntialiasedElements mAADragBackup, mNotAADragBackup;
+  Q_CP::AntialiasedElements mAADragBackup, mNotAADragBackup;
   
   // introduced virtual methods:
   virtual int calculateMargin();
@@ -2353,7 +2353,7 @@ protected:
   // reimplemented virtual methods:
   virtual void applyDefaultAntialiasingHint(QCPPainter *painter) const Q_DECL_OVERRIDE;
   virtual void draw(QCPPainter *painter) Q_DECL_OVERRIDE;
-  virtual QCP::Interaction selectionCategory() const Q_DECL_OVERRIDE;
+  virtual Q_CP::Interaction selectionCategory() const Q_DECL_OVERRIDE;
   // events:
   virtual void selectEvent(QMouseEvent *event, bool additive, const QVariant &details, bool *selectionStateChanged) Q_DECL_OVERRIDE;
   virtual void deselectEvent(bool *selectionStateChanged) Q_DECL_OVERRIDE;
@@ -2613,8 +2613,8 @@ public:
   const_iterator findBegin(double sortKey, bool expandedRange=true) const;
   const_iterator findEnd(double sortKey, bool expandedRange=true) const;
   const_iterator at(int index) const { return constBegin()+qBound(0, index, size()); }
-  QCPRange keyRange(bool &foundRange, QCP::SignDomain signDomain=QCP::sdBoth);
-  QCPRange valueRange(bool &foundRange, QCP::SignDomain signDomain=QCP::sdBoth, const QCPRange &inKeyRange=QCPRange());
+  QCPRange keyRange(bool &foundRange, Q_CP::SignDomain signDomain=Q_CP::sdBoth);
+  QCPRange valueRange(bool &foundRange, Q_CP::SignDomain signDomain=Q_CP::sdBoth, const QCPRange &inKeyRange=QCPRange());
   QCPDataRange dataRange() const { return QCPDataRange(0, size()); }
   void limitIteratorsToDataRange(const_iterator &begin, const_iterator &end, const QCPDataRange &dataRange) const;
   
@@ -3120,7 +3120,7 @@ typename QCPDataContainer<DataType>::const_iterator QCPDataContainer<DataType>::
   \see valueRange
 */
 template <class DataType>
-QCPRange QCPDataContainer<DataType>::keyRange(bool &foundRange, QCP::SignDomain signDomain)
+QCPRange QCPDataContainer<DataType>::keyRange(bool &foundRange, Q_CP::SignDomain signDomain)
 {
   if (isEmpty())
   {
@@ -3134,7 +3134,7 @@ QCPRange QCPDataContainer<DataType>::keyRange(bool &foundRange, QCP::SignDomain 
   
   QCPDataContainer<DataType>::const_iterator it = constBegin();
   QCPDataContainer<DataType>::const_iterator itEnd = constEnd();
-  if (signDomain == QCP::sdBoth) // range may be anywhere
+  if (signDomain == Q_CP::sdBoth) // range may be anywhere
   {
     if (DataType::sortKeyIsMainKey()) // if DataType is sorted by main key (e.g. QCPGraph, but not QCPCurve), use faster algorithm by finding just first and last key with non-NaN value
     {
@@ -3180,7 +3180,7 @@ QCPRange QCPDataContainer<DataType>::keyRange(bool &foundRange, QCP::SignDomain 
         ++it;
       }
     }
-  } else if (signDomain == QCP::sdNegative) // range may only be in the negative sign domain
+  } else if (signDomain == Q_CP::sdNegative) // range may only be in the negative sign domain
   {
     while (it != itEnd)
     {
@@ -3200,7 +3200,7 @@ QCPRange QCPDataContainer<DataType>::keyRange(bool &foundRange, QCP::SignDomain 
       }
       ++it;
     }
-  } else if (signDomain == QCP::sdPositive) // range may only be in the positive sign domain
+  } else if (signDomain == Q_CP::sdPositive) // range may only be in the positive sign domain
   {
     while (it != itEnd)
     {
@@ -3243,7 +3243,7 @@ QCPRange QCPDataContainer<DataType>::keyRange(bool &foundRange, QCP::SignDomain 
   \see keyRange
 */
 template <class DataType>
-QCPRange QCPDataContainer<DataType>::valueRange(bool &foundRange, QCP::SignDomain signDomain, const QCPRange &inKeyRange)
+QCPRange QCPDataContainer<DataType>::valueRange(bool &foundRange, Q_CP::SignDomain signDomain, const QCPRange &inKeyRange)
 {
   if (isEmpty())
   {
@@ -3262,7 +3262,7 @@ QCPRange QCPDataContainer<DataType>::valueRange(bool &foundRange, QCP::SignDomai
     itBegin = findBegin(inKeyRange.lower, false);
     itEnd = findEnd(inKeyRange.upper, false);
   }
-  if (signDomain == QCP::sdBoth) // range may be anywhere
+  if (signDomain == Q_CP::sdBoth) // range may be anywhere
   {
     for (QCPDataContainer<DataType>::const_iterator it = itBegin; it != itEnd; ++it)
     {
@@ -3280,7 +3280,7 @@ QCPRange QCPDataContainer<DataType>::valueRange(bool &foundRange, QCP::SignDomai
         haveUpper = true;
       }
     }
-  } else if (signDomain == QCP::sdNegative) // range may only be in the negative sign domain
+  } else if (signDomain == Q_CP::sdNegative) // range may only be in the negative sign domain
   {
     for (QCPDataContainer<DataType>::const_iterator it = itBegin; it != itEnd; ++it)
     {
@@ -3298,7 +3298,7 @@ QCPRange QCPDataContainer<DataType>::valueRange(bool &foundRange, QCP::SignDomai
         haveUpper = true;
       }
     }
-  } else if (signDomain == QCP::sdPositive) // range may only be in the positive sign domain
+  } else if (signDomain == Q_CP::sdPositive) // range may only be in the positive sign domain
   {
     for (QCPDataContainer<DataType>::const_iterator it = itBegin; it != itEnd; ++it)
     {
@@ -3465,7 +3465,7 @@ class QCP_LIB_DECL QCPAbstractPlottable : public QCPLayerable
   Q_PROPERTY(QBrush brush READ brush WRITE setBrush)
   Q_PROPERTY(QCPAxis* keyAxis READ keyAxis WRITE setKeyAxis)
   Q_PROPERTY(QCPAxis* valueAxis READ valueAxis WRITE setValueAxis)
-  Q_PROPERTY(QCP::SelectionType selectable READ selectable WRITE setSelectable NOTIFY selectableChanged)
+  Q_PROPERTY(Q_CP::SelectionType selectable READ selectable WRITE setSelectable NOTIFY selectableChanged)
   Q_PROPERTY(QCPDataSelection selection READ selection WRITE setSelection NOTIFY selectionChanged)
   Q_PROPERTY(QCPSelectionDecorator* selectionDecorator READ selectionDecorator WRITE setSelectionDecorator)
   /// \endcond
@@ -3481,7 +3481,7 @@ public:
   QBrush brush() const { return mBrush; }
   QCPAxis *keyAxis() const { return mKeyAxis.data(); }
   QCPAxis *valueAxis() const { return mValueAxis.data(); }
-  QCP::SelectionType selectable() const { return mSelectable; }
+  Q_CP::SelectionType selectable() const { return mSelectable; }
   bool selected() const { return !mSelection.isEmpty(); }
   QCPDataSelection selection() const { return mSelection; }
   QCPSelectionDecorator *selectionDecorator() const { return mSelectionDecorator; }
@@ -3494,15 +3494,15 @@ public:
   void setBrush(const QBrush &brush);
   void setKeyAxis(QCPAxis *axis);
   void setValueAxis(QCPAxis *axis);
-  Q_SLOT void setSelectable(QCP::SelectionType selectable);
+  Q_SLOT void setSelectable(Q_CP::SelectionType selectable);
   Q_SLOT void setSelection(QCPDataSelection selection);
   void setSelectionDecorator(QCPSelectionDecorator *decorator);
 
   // introduced virtual methods:
   virtual double selectTest(const QPointF &pos, bool onlySelectable, QVariant *details=nullptr) const Q_DECL_OVERRIDE = 0; // actually introduced in QCPLayerable as non-pure, but we want to force reimplementation for plottables
   virtual QCPPlottableInterface1D *interface1D() { return nullptr; }
-  virtual QCPRange getKeyRange(bool &foundRange, QCP::SignDomain inSignDomain=QCP::sdBoth) const = 0;
-  virtual QCPRange getValueRange(bool &foundRange, QCP::SignDomain inSignDomain=QCP::sdBoth, const QCPRange &inKeyRange=QCPRange()) const = 0;
+  virtual QCPRange getKeyRange(bool &foundRange, Q_CP::SignDomain inSignDomain=Q_CP::sdBoth) const = 0;
+  virtual QCPRange getValueRange(bool &foundRange, Q_CP::SignDomain inSignDomain=Q_CP::sdBoth, const QCPRange &inKeyRange=QCPRange()) const = 0;
   
   // non-property methods:
   void coordsToPixels(double key, double value, double &x, double &y) const;
@@ -3520,7 +3520,7 @@ public:
 signals:
   void selectionChanged(bool selected);
   void selectionChanged(const QCPDataSelection &selection);
-  void selectableChanged(QCP::SelectionType selectable);
+  void selectableChanged(Q_CP::SelectionType selectable);
   
 protected:
   // property members:
@@ -3529,14 +3529,14 @@ protected:
   QPen mPen;
   QBrush mBrush;
   QPointer<QCPAxis> mKeyAxis, mValueAxis;
-  QCP::SelectionType mSelectable;
+  Q_CP::SelectionType mSelectable;
   QCPDataSelection mSelection;
   QCPSelectionDecorator *mSelectionDecorator;
   
   // reimplemented virtual methods:
   virtual QRect clipRect() const Q_DECL_OVERRIDE;
   virtual void draw(QCPPainter *painter) Q_DECL_OVERRIDE = 0;
-  virtual QCP::Interaction selectionCategory() const Q_DECL_OVERRIDE;
+  virtual Q_CP::Interaction selectionCategory() const Q_DECL_OVERRIDE;
   void applyDefaultAntialiasingHint(QCPPainter *painter) const Q_DECL_OVERRIDE;
   // events:
   virtual void selectEvent(QMouseEvent *event, bool additive, const QVariant &details, bool *selectionStateChanged) Q_DECL_OVERRIDE;
@@ -3720,7 +3720,7 @@ protected:
   bool mSelectable, mSelected;
   
   // reimplemented virtual methods:
-  virtual QCP::Interaction selectionCategory() const Q_DECL_OVERRIDE;
+  virtual Q_CP::Interaction selectionCategory() const Q_DECL_OVERRIDE;
   virtual QRect clipRect() const Q_DECL_OVERRIDE;
   virtual void applyDefaultAntialiasingHint(QCPPainter *painter) const Q_DECL_OVERRIDE;
   virtual void draw(QCPPainter *painter) Q_DECL_OVERRIDE = 0;
@@ -3797,15 +3797,15 @@ public:
   bool backgroundScaled() const { return mBackgroundScaled; }
   Qt::AspectRatioMode backgroundScaledMode() const { return mBackgroundScaledMode; }
   QCPLayoutGrid *plotLayout() const { return mPlotLayout; }
-  QCP::AntialiasedElements antialiasedElements() const { return mAntialiasedElements; }
-  QCP::AntialiasedElements notAntialiasedElements() const { return mNotAntialiasedElements; }
+  Q_CP::AntialiasedElements antialiasedElements() const { return mAntialiasedElements; }
+  Q_CP::AntialiasedElements notAntialiasedElements() const { return mNotAntialiasedElements; }
   bool autoAddPlottableToLegend() const { return mAutoAddPlottableToLegend; }
-  const QCP::Interactions interactions() const { return mInteractions; }
+  const Q_CP::Interactions interactions() const { return mInteractions; }
   int selectionTolerance() const { return mSelectionTolerance; }
   bool noAntialiasingOnDrag() const { return mNoAntialiasingOnDrag; }
-  QCP::PlottingHints plottingHints() const { return mPlottingHints; }
+  Q_CP::PlottingHints plottingHints() const { return mPlottingHints; }
   Qt::KeyboardModifier multiSelectModifier() const { return mMultiSelectModifier; }
-  QCP::SelectionRectMode selectionRectMode() const { return mSelectionRectMode; }
+  Q_CP::SelectionRectMode selectionRectMode() const { return mSelectionRectMode; }
   QCPSelectionRect *selectionRect() const { return mSelectionRect; }
   bool openGl() const { return mOpenGl; }
   
@@ -3817,19 +3817,19 @@ public:
   void setBackground(const QBrush &brush);
   void setBackgroundScaled(bool scaled);
   void setBackgroundScaledMode(Qt::AspectRatioMode mode);
-  void setAntialiasedElements(const QCP::AntialiasedElements &antialiasedElements);
-  void setAntialiasedElement(QCP::AntialiasedElement antialiasedElement, bool enabled=true);
-  void setNotAntialiasedElements(const QCP::AntialiasedElements &notAntialiasedElements);
-  void setNotAntialiasedElement(QCP::AntialiasedElement notAntialiasedElement, bool enabled=true);
+  void setAntialiasedElements(const Q_CP::AntialiasedElements &antialiasedElements);
+  void setAntialiasedElement(Q_CP::AntialiasedElement antialiasedElement, bool enabled=true);
+  void setNotAntialiasedElements(const Q_CP::AntialiasedElements &notAntialiasedElements);
+  void setNotAntialiasedElement(Q_CP::AntialiasedElement notAntialiasedElement, bool enabled=true);
   void setAutoAddPlottableToLegend(bool on);
-  void setInteractions(const QCP::Interactions &interactions);
-  void setInteraction(const QCP::Interaction &interaction, bool enabled=true);
+  void setInteractions(const Q_CP::Interactions &interactions);
+  void setInteraction(const Q_CP::Interaction &interaction, bool enabled=true);
   void setSelectionTolerance(int pixels);
   void setNoAntialiasingOnDrag(bool enabled);
-  void setPlottingHints(const QCP::PlottingHints &hints);
-  void setPlottingHint(QCP::PlottingHint hint, bool enabled=true);
+  void setPlottingHints(const Q_CP::PlottingHints &hints);
+  void setPlottingHint(Q_CP::PlottingHint hint, bool enabled=true);
   void setMultiSelectModifier(Qt::KeyboardModifier modifier);
-  void setSelectionRectMode(QCP::SelectionRectMode mode);
+  void setSelectionRectMode(Q_CP::SelectionRectMode mode);
   void setSelectionRect(QCPSelectionRect *selectionRect);
   void setOpenGl(bool enabled, int multisampling=16);
   
@@ -3893,11 +3893,11 @@ public:
   QList<QCPLegend*> selectedLegends() const;
   Q_SLOT void deselectAll();
   
-  bool savePdf(const QString &fileName, int width=0, int height=0, QCP::ExportPen exportPen=QCP::epAllowCosmetic, const QString &pdfCreator=QString(), const QString &pdfTitle=QString());
-  bool savePng(const QString &fileName, int width=0, int height=0, double scale=1.0, int quality=-1, int resolution=96, QCP::ResolutionUnit resolutionUnit=QCP::ruDotsPerInch);
-  bool saveJpg(const QString &fileName, int width=0, int height=0, double scale=1.0, int quality=-1, int resolution=96, QCP::ResolutionUnit resolutionUnit=QCP::ruDotsPerInch);
-  bool saveBmp(const QString &fileName, int width=0, int height=0, double scale=1.0, int resolution=96, QCP::ResolutionUnit resolutionUnit=QCP::ruDotsPerInch);
-  bool saveRastered(const QString &fileName, int width, int height, double scale, const char *format, int quality=-1, int resolution=96, QCP::ResolutionUnit resolutionUnit=QCP::ruDotsPerInch);
+  bool savePdf(const QString &fileName, int width=0, int height=0, Q_CP::ExportPen exportPen=Q_CP::epAllowCosmetic, const QString &pdfCreator=QString(), const QString &pdfTitle=QString());
+  bool savePng(const QString &fileName, int width=0, int height=0, double scale=1.0, int quality=-1, int resolution=96, Q_CP::ResolutionUnit resolutionUnit=Q_CP::ruDotsPerInch);
+  bool saveJpg(const QString &fileName, int width=0, int height=0, double scale=1.0, int quality=-1, int resolution=96, Q_CP::ResolutionUnit resolutionUnit=Q_CP::ruDotsPerInch);
+  bool saveBmp(const QString &fileName, int width=0, int height=0, double scale=1.0, int resolution=96, Q_CP::ResolutionUnit resolutionUnit=Q_CP::ruDotsPerInch);
+  bool saveRastered(const QString &fileName, int width, int height, double scale, const char *format, int quality=-1, int resolution=96, Q_CP::ResolutionUnit resolutionUnit=Q_CP::ruDotsPerInch);
   QPixmap toPixmap(int width=0, int height=0, double scale=1.0);
   void toPainter(QCPPainter *painter, int width=0, int height=0);
   Q_SLOT void replot(QCustomPlot::RefreshPriority refreshPriority=QCustomPlot::rpRefreshHint);
@@ -3937,8 +3937,8 @@ protected:
   QList<QCPGraph*> mGraphs; // extra list of plottables also in mPlottables that are of type QCPGraph
   QList<QCPAbstractItem*> mItems;
   QList<QCPLayer*> mLayers;
-  QCP::AntialiasedElements mAntialiasedElements, mNotAntialiasedElements;
-  QCP::Interactions mInteractions;
+  Q_CP::AntialiasedElements mAntialiasedElements, mNotAntialiasedElements;
+  Q_CP::Interactions mInteractions;
   int mSelectionTolerance;
   bool mNoAntialiasingOnDrag;
   QBrush mBackgroundBrush;
@@ -3947,9 +3947,9 @@ protected:
   bool mBackgroundScaled;
   Qt::AspectRatioMode mBackgroundScaledMode;
   QCPLayer *mCurrentLayer;
-  QCP::PlottingHints mPlottingHints;
+  Q_CP::PlottingHints mPlottingHints;
   Qt::KeyboardModifier mMultiSelectModifier;
-  QCP::SelectionRectMode mSelectionRectMode;
+  Q_CP::SelectionRectMode mSelectionRectMode;
   QCPSelectionRect *mSelectionRect;
   bool mOpenGl;
   
@@ -3965,7 +3965,7 @@ protected:
   bool mReplotQueued;
   double mReplotTime, mReplotTimeAverage;
   int mOpenGlMultisamples;
-  QCP::AntialiasedElements mOpenGlAntialiasedElementsBackup;
+  Q_CP::AntialiasedElements mOpenGlAntialiasedElementsBackup;
   bool mOpenGlCacheLabelsBackup;
 #ifdef QCP_OPENGL_FBO
   QSharedPointer<QOpenGLContext> mGlContext;
@@ -4487,7 +4487,7 @@ template <class DataType>
 QCPDataSelection QCPAbstractPlottable1D<DataType>::selectTestRect(const QRectF &rect, bool onlySelectable) const
 {
   QCPDataSelection result;
-  if ((onlySelectable && mSelectable == QCP::stNone) || mDataContainer->isEmpty())
+  if ((onlySelectable && mSelectable == Q_CP::stNone) || mDataContainer->isEmpty())
     return result;
   if (!mKeyAxis || !mValueAxis)
     return result;
@@ -4574,7 +4574,7 @@ void QCPAbstractPlottable1D<DataType>::clear()
 template <class DataType>
 double QCPAbstractPlottable1D<DataType>::selectTest(const QPointF &pos, bool onlySelectable, QVariant *details) const
 {
-  if ((onlySelectable && mSelectable == QCP::stNone) || mDataContainer->isEmpty())
+  if ((onlySelectable && mSelectable == Q_CP::stNone) || mDataContainer->isEmpty())
     return -1;
   if (!mKeyAxis || !mValueAxis)
     return -1;
@@ -4638,7 +4638,7 @@ void QCPAbstractPlottable1D<DataType>::getDataSegments(QList<QCPDataRange> &sele
 {
   selectedSegments.clear();
   unselectedSegments.clear();
-  if (mSelectable == QCP::stWhole) // stWhole selection type draws the entire plottable with selected style if mSelection isn't empty
+  if (mSelectable == Q_CP::stWhole) // stWhole selection type draws the entire plottable with selected style if mSelection isn't empty
   {
     if (selected())
       selectedSegments << QCPDataRange(0, dataCount());
@@ -4679,7 +4679,7 @@ void QCPAbstractPlottable1D<DataType>::drawPolyline(QCPPainter *painter, const Q
   }
 
   // if drawing solid line and not in PDF, use much faster line drawing instead of polyline:
-  if (mParentPlot->plottingHints().testFlag(QCP::phFastPolylines) &&
+  if (mParentPlot->plottingHints().testFlag(Q_CP::phFastPolylines) &&
       painter->pen().style() == Qt::SolidLine &&
       !painter->modes().testFlag(QCPPainter::pmVectorized) &&
       !painter->modes().testFlag(QCPPainter::pmNoCaching))
@@ -4994,14 +4994,14 @@ protected:
   
   // non-property members:
   QList<QCPRange> mDragStartHorzRange, mDragStartVertRange;
-  QCP::AntialiasedElements mAADragBackup, mNotAADragBackup;
+  Q_CP::AntialiasedElements mAADragBackup, mNotAADragBackup;
   bool mDragging;
   QHash<QCPAxis::AxisType, QList<QCPAxis*> > mAxes;
   
   // reimplemented virtual methods:
   virtual void applyDefaultAntialiasingHint(QCPPainter *painter) const Q_DECL_OVERRIDE;
   virtual void draw(QCPPainter *painter) Q_DECL_OVERRIDE;
-  virtual int calculateAutoMargin(QCP::MarginSide side) Q_DECL_OVERRIDE;
+  virtual int calculateAutoMargin(Q_CP::MarginSide side) Q_DECL_OVERRIDE;
   virtual void layoutChanged() Q_DECL_OVERRIDE;
   // events:
   virtual void mousePressEvent(QMouseEvent *event, const QVariant &details) Q_DECL_OVERRIDE;
@@ -5075,7 +5075,7 @@ protected:
   bool mSelectable, mSelected;
   
   // reimplemented virtual methods:
-  virtual QCP::Interaction selectionCategory() const Q_DECL_OVERRIDE;
+  virtual Q_CP::Interaction selectionCategory() const Q_DECL_OVERRIDE;
   virtual void applyDefaultAntialiasingHint(QCPPainter *painter) const Q_DECL_OVERRIDE;
   virtual QRect clipRect() const Q_DECL_OVERRIDE;
   virtual void draw(QCPPainter *painter) Q_DECL_OVERRIDE = 0;
@@ -5218,7 +5218,7 @@ protected:
   
   // reimplemented virtual methods:
   virtual void parentPlotInitialized(QCustomPlot *parentPlot) Q_DECL_OVERRIDE;
-  virtual QCP::Interaction selectionCategory() const Q_DECL_OVERRIDE;
+  virtual Q_CP::Interaction selectionCategory() const Q_DECL_OVERRIDE;
   virtual void applyDefaultAntialiasingHint(QCPPainter *painter) const Q_DECL_OVERRIDE;
   virtual void draw(QCPPainter *painter) Q_DECL_OVERRIDE;
   // events:
@@ -5522,8 +5522,8 @@ public:
   
   // reimplemented virtual methods:
   virtual double selectTest(const QPointF &pos, bool onlySelectable, QVariant *details=nullptr) const Q_DECL_OVERRIDE;
-  virtual QCPRange getKeyRange(bool &foundRange, QCP::SignDomain inSignDomain=QCP::sdBoth) const Q_DECL_OVERRIDE;
-  virtual QCPRange getValueRange(bool &foundRange, QCP::SignDomain inSignDomain=QCP::sdBoth, const QCPRange &inKeyRange=QCPRange()) const Q_DECL_OVERRIDE;
+  virtual QCPRange getKeyRange(bool &foundRange, Q_CP::SignDomain inSignDomain=Q_CP::sdBoth) const Q_DECL_OVERRIDE;
+  virtual QCPRange getValueRange(bool &foundRange, Q_CP::SignDomain inSignDomain=Q_CP::sdBoth, const QCPRange &inKeyRange=QCPRange()) const Q_DECL_OVERRIDE;
   
 protected:
   // property members:
@@ -5654,8 +5654,8 @@ public:
   
   // reimplemented virtual methods:
   virtual double selectTest(const QPointF &pos, bool onlySelectable, QVariant *details=nullptr) const Q_DECL_OVERRIDE;
-  virtual QCPRange getKeyRange(bool &foundRange, QCP::SignDomain inSignDomain=QCP::sdBoth) const Q_DECL_OVERRIDE;
-  virtual QCPRange getValueRange(bool &foundRange, QCP::SignDomain inSignDomain=QCP::sdBoth, const QCPRange &inKeyRange=QCPRange()) const Q_DECL_OVERRIDE;
+  virtual QCPRange getKeyRange(bool &foundRange, Q_CP::SignDomain inSignDomain=Q_CP::sdBoth) const Q_DECL_OVERRIDE;
+  virtual QCPRange getValueRange(bool &foundRange, Q_CP::SignDomain inSignDomain=Q_CP::sdBoth, const QCPRange &inKeyRange=QCPRange()) const Q_DECL_OVERRIDE;
   
 protected:
   // property members:
@@ -5845,8 +5845,8 @@ public:
   // reimplemented virtual methods:
   virtual QCPDataSelection selectTestRect(const QRectF &rect, bool onlySelectable) const Q_DECL_OVERRIDE;
   virtual double selectTest(const QPointF &pos, bool onlySelectable, QVariant *details=nullptr) const Q_DECL_OVERRIDE;
-  virtual QCPRange getKeyRange(bool &foundRange, QCP::SignDomain inSignDomain=QCP::sdBoth) const Q_DECL_OVERRIDE;
-  virtual QCPRange getValueRange(bool &foundRange, QCP::SignDomain inSignDomain=QCP::sdBoth, const QCPRange &inKeyRange=QCPRange()) const Q_DECL_OVERRIDE;
+  virtual QCPRange getKeyRange(bool &foundRange, Q_CP::SignDomain inSignDomain=Q_CP::sdBoth) const Q_DECL_OVERRIDE;
+  virtual QCPRange getValueRange(bool &foundRange, Q_CP::SignDomain inSignDomain=Q_CP::sdBoth, const QCPRange &inKeyRange=QCPRange()) const Q_DECL_OVERRIDE;
   virtual QPointF dataPixelPosition(int index) const Q_DECL_OVERRIDE;
   
 protected:
@@ -5963,8 +5963,8 @@ public:
   // reimplemented virtual methods:
   virtual QCPDataSelection selectTestRect(const QRectF &rect, bool onlySelectable) const Q_DECL_OVERRIDE;
   virtual double selectTest(const QPointF &pos, bool onlySelectable, QVariant *details=nullptr) const Q_DECL_OVERRIDE;
-  virtual QCPRange getKeyRange(bool &foundRange, QCP::SignDomain inSignDomain=QCP::sdBoth) const Q_DECL_OVERRIDE;
-  virtual QCPRange getValueRange(bool &foundRange, QCP::SignDomain inSignDomain=QCP::sdBoth, const QCPRange &inKeyRange=QCPRange()) const Q_DECL_OVERRIDE;
+  virtual QCPRange getKeyRange(bool &foundRange, Q_CP::SignDomain inSignDomain=Q_CP::sdBoth) const Q_DECL_OVERRIDE;
+  virtual QCPRange getValueRange(bool &foundRange, Q_CP::SignDomain inSignDomain=Q_CP::sdBoth, const QCPRange &inKeyRange=QCPRange()) const Q_DECL_OVERRIDE;
   
 protected:
   // property members:
@@ -6096,8 +6096,8 @@ public:
   
   // reimplemented virtual methods:
   virtual double selectTest(const QPointF &pos, bool onlySelectable, QVariant *details=nullptr) const Q_DECL_OVERRIDE;
-  virtual QCPRange getKeyRange(bool &foundRange, QCP::SignDomain inSignDomain=QCP::sdBoth) const Q_DECL_OVERRIDE;
-  virtual QCPRange getValueRange(bool &foundRange, QCP::SignDomain inSignDomain=QCP::sdBoth, const QCPRange &inKeyRange=QCPRange()) const Q_DECL_OVERRIDE;
+  virtual QCPRange getKeyRange(bool &foundRange, Q_CP::SignDomain inSignDomain=Q_CP::sdBoth) const Q_DECL_OVERRIDE;
+  virtual QCPRange getValueRange(bool &foundRange, Q_CP::SignDomain inSignDomain=Q_CP::sdBoth, const QCPRange &inKeyRange=QCPRange()) const Q_DECL_OVERRIDE;
   
 signals:
   void dataRangeChanged(const QCPRange &newRange);
@@ -6236,8 +6236,8 @@ public:
   // reimplemented virtual methods:
   virtual QCPDataSelection selectTestRect(const QRectF &rect, bool onlySelectable) const Q_DECL_OVERRIDE;
   virtual double selectTest(const QPointF &pos, bool onlySelectable, QVariant *details=nullptr) const Q_DECL_OVERRIDE;
-  virtual QCPRange getKeyRange(bool &foundRange, QCP::SignDomain inSignDomain=QCP::sdBoth) const Q_DECL_OVERRIDE;
-  virtual QCPRange getValueRange(bool &foundRange, QCP::SignDomain inSignDomain=QCP::sdBoth, const QCPRange &inKeyRange=QCPRange()) const Q_DECL_OVERRIDE;
+  virtual QCPRange getKeyRange(bool &foundRange, Q_CP::SignDomain inSignDomain=Q_CP::sdBoth) const Q_DECL_OVERRIDE;
+  virtual QCPRange getValueRange(bool &foundRange, Q_CP::SignDomain inSignDomain=Q_CP::sdBoth, const QCPRange &inKeyRange=QCPRange()) const Q_DECL_OVERRIDE;
   
   // static methods:
   static QCPFinancialDataContainer timeSeriesToOhlc(const QVector<double> &time, const QVector<double> &value, double timeBinSize, double timeBinOffset = 0);
@@ -6378,8 +6378,8 @@ protected:
   // reimplemented virtual methods:
   virtual void draw(QCPPainter *painter) Q_DECL_OVERRIDE;
   virtual void drawLegendIcon(QCPPainter *painter, const QRectF &rect) const Q_DECL_OVERRIDE;
-  virtual QCPRange getKeyRange(bool &foundRange, QCP::SignDomain inSignDomain=QCP::sdBoth) const Q_DECL_OVERRIDE;
-  virtual QCPRange getValueRange(bool &foundRange, QCP::SignDomain inSignDomain=QCP::sdBoth, const QCPRange &inKeyRange=QCPRange()) const Q_DECL_OVERRIDE;
+  virtual QCPRange getKeyRange(bool &foundRange, Q_CP::SignDomain inSignDomain=Q_CP::sdBoth) const Q_DECL_OVERRIDE;
+  virtual QCPRange getValueRange(bool &foundRange, Q_CP::SignDomain inSignDomain=Q_CP::sdBoth, const QCPRange &inKeyRange=QCPRange()) const Q_DECL_OVERRIDE;
   
   // non-virtual methods:
   void getErrorBarLines(QCPErrorBarsDataContainer::const_iterator it, QVector<QLineF> &backbones, QVector<QLineF> &whiskers) const;
@@ -7190,13 +7190,13 @@ protected:
   QVector<double> mSubTickVector;
   bool mDragging;
   QCPRange mDragStartRange;
-  QCP::AntialiasedElements mAADragBackup, mNotAADragBackup;
+  Q_CP::AntialiasedElements mAADragBackup, mNotAADragBackup;
   QCPLabelPainterPrivate mLabelPainter;
   
   // reimplemented virtual methods:
   virtual void applyDefaultAntialiasingHint(QCPPainter *painter) const Q_DECL_OVERRIDE;
   virtual void draw(QCPPainter *painter) Q_DECL_OVERRIDE;
-  virtual QCP::Interaction selectionCategory() const Q_DECL_OVERRIDE;
+  virtual Q_CP::Interaction selectionCategory() const Q_DECL_OVERRIDE;
   // events:
   virtual void selectEvent(QMouseEvent *event, bool additive, const QVariant &details, bool *selectionStateChanged) Q_DECL_OVERRIDE;
   virtual void deselectEvent(bool *selectionStateChanged) Q_DECL_OVERRIDE;
@@ -7468,13 +7468,13 @@ protected:
   bool mDragging;
   QCPRange mDragAngularStart;
   QList<QCPRange> mDragRadialStart;
-  QCP::AntialiasedElements mAADragBackup, mNotAADragBackup;
+  Q_CP::AntialiasedElements mAADragBackup, mNotAADragBackup;
   QCPLabelPainterPrivate mLabelPainter;
   
   // reimplemented virtual methods:
   virtual void applyDefaultAntialiasingHint(QCPPainter *painter) const Q_DECL_OVERRIDE;
   virtual void draw(QCPPainter *painter) Q_DECL_OVERRIDE;
-  virtual QCP::Interaction selectionCategory() const Q_DECL_OVERRIDE;
+  virtual Q_CP::Interaction selectionCategory() const Q_DECL_OVERRIDE;
   // events:
   virtual void mousePressEvent(QMouseEvent *event, const QVariant &details) Q_DECL_OVERRIDE;
   virtual void mouseMoveEvent(QMouseEvent *event, const QPointF &startPos) Q_DECL_OVERRIDE;
@@ -7644,7 +7644,7 @@ public:
   bool periodic() const { return mPeriodic; }
   QCPPolarAxisAngular *keyAxis() const { return mKeyAxis.data(); }
   QCPPolarAxisRadial *valueAxis() const { return mValueAxis.data(); }
-  QCP::SelectionType selectable() const { return mSelectable; }
+  Q_CP::SelectionType selectable() const { return mSelectable; }
   bool selected() const { return !mSelection.isEmpty(); }
   QCPDataSelection selection() const { return mSelection; }
   //QCPSelectionDecorator *selectionDecorator() const { return mSelectionDecorator; }
@@ -7661,7 +7661,7 @@ public:
   void setPeriodic(bool enabled);
   void setKeyAxis(QCPPolarAxisAngular *axis);
   void setValueAxis(QCPPolarAxisRadial *axis);
-  Q_SLOT void setSelectable(QCP::SelectionType selectable);
+  Q_SLOT void setSelectable(Q_CP::SelectionType selectable);
   Q_SLOT void setSelection(QCPDataSelection selection);
   //void setSelectionDecorator(QCPSelectionDecorator *decorator);
   void setData(QSharedPointer<QCPGraphDataContainer> data);
@@ -7687,13 +7687,13 @@ public:
   // introduced virtual methods:
   virtual double selectTest(const QPointF &pos, bool onlySelectable, QVariant *details=0) const; // actually introduced in QCPLayerable as non-pure, but we want to force reimplementation for plottables
   virtual QCPPlottableInterface1D *interface1D() { return 0; } // TODO: return this later, when QCPAbstractPolarPlottable is created
-  virtual QCPRange getKeyRange(bool &foundRange, QCP::SignDomain inSignDomain=QCP::sdBoth) const;
-  virtual QCPRange getValueRange(bool &foundRange, QCP::SignDomain inSignDomain=QCP::sdBoth, const QCPRange &inKeyRange=QCPRange()) const;
+  virtual QCPRange getKeyRange(bool &foundRange, Q_CP::SignDomain inSignDomain=Q_CP::sdBoth) const;
+  virtual QCPRange getValueRange(bool &foundRange, Q_CP::SignDomain inSignDomain=Q_CP::sdBoth, const QCPRange &inKeyRange=QCPRange()) const;
   
 signals:
   void selectionChanged(bool selected);
   void selectionChanged(const QCPDataSelection &selection);
-  void selectableChanged(QCP::SelectionType selectable);
+  void selectableChanged(Q_CP::SelectionType selectable);
   
 protected:
   // property members:
@@ -7707,14 +7707,14 @@ protected:
   bool mPeriodic;
   QPointer<QCPPolarAxisAngular> mKeyAxis;
   QPointer<QCPPolarAxisRadial> mValueAxis;
-  QCP::SelectionType mSelectable;
+  Q_CP::SelectionType mSelectable;
   QCPDataSelection mSelection;
   //QCPSelectionDecorator *mSelectionDecorator;
   
   // introduced virtual methods (later reimplemented TODO from QCPAbstractPolarPlottable):
   virtual QRect clipRect() const;
   virtual void draw(QCPPainter *painter);
-  virtual QCP::Interaction selectionCategory() const;
+  virtual Q_CP::Interaction selectionCategory() const;
   void applyDefaultAntialiasingHint(QCPPainter *painter) const;
   // events:
   virtual void selectEvent(QMouseEvent *event, bool additive, const QVariant &details, bool *selectionStateChanged);
