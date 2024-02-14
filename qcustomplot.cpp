@@ -26726,6 +26726,21 @@ QCPRange QCPColorMap::getKeyRange(bool &foundRange, QCP::SignDomain inSignDomain
   return result;
 }
 
+void QCPColorMap::mousePressEvent(QMouseEvent *event, const QVariant &details)
+{
+    Q_UNUSED(event)
+
+    QToolTip::showText(QPoint(100, 100), details.toString());
+}
+
+void QCPColorMap::mouseMoveEvent(QMouseEvent *event, const QPointF &startPos)
+{
+    Q_UNUSED(event)
+
+    int color = qGray(mMapImage.pixel(startPos.toPoint()));
+    QToolTip::showText(startPos.toPoint(), QString::number(color));
+}
+
 /* inherits documentation from base class */
 QCPRange QCPColorMap::getValueRange(bool &foundRange, QCP::SignDomain inSignDomain, const QCPRange &inKeyRange) const
 {
