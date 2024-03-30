@@ -4171,6 +4171,7 @@ protected:
   // helpers for subclasses:
   void getDataSegments(QList<QCPDataRange> &selectedSegments, QList<QCPDataRange> &unselectedSegments) const;
   void drawPolyline(QCPPainter *painter, const QVector<QPointF> &lineData) const;
+  void drawVectors(QCPPainter *painter, const QVector<QPointF> &data1, const QVector<QPointF> &data2) const;
 
 private:
   Q_DISABLE_COPY(QCPAbstractPlottable1D)
@@ -4719,6 +4720,18 @@ void QCPAbstractPlottable1D<DataType>::drawPolyline(QCPPainter *painter, const Q
     // draw last segment:
     painter->drawPolyline(lineData.constData()+segmentStart, lineDataSize-segmentStart);
   }
+}
+
+template <class DataType>
+void QCPAbstractPlottable1D<DataType>::drawVectors(QCPPainter *painter, const QVector<QPointF> &data1, const QVector<QPointF> &data2) const
+{
+    if (data1.count() != data2.count())
+        return;
+
+    for (int i = 0; i < data1.size(); ++i) {
+        QLine line(data1.at(i).toPoint(), data2.at(i).toPoint());
+        painter->drawLine(line);
+    }
 }
 
 
