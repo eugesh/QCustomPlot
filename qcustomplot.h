@@ -3470,7 +3470,7 @@ class QCP_LIB_DECL QCPAbstractPlottable : public QCPLayerable
   Q_PROPERTY(QCPSelectionDecorator* selectionDecorator READ selectionDecorator WRITE setSelectionDecorator)
   /// \endcond
 public:
-  QCPAbstractPlottable(QCPAxis *keyAxis, QCPAxis *valueAxis);
+  QCPAbstractPlottable(QCPAxis *keyAxis, QCPAxis *valueAxis, bool addToLegend=true);
   virtual ~QCPAbstractPlottable() Q_DECL_OVERRIDE;
   
   // getters:
@@ -3850,7 +3850,7 @@ public:
   // specialized interface for QCPGraph:
   QCPGraph *graph(int index) const;
   QCPGraph *graph() const;
-  QCPGraph *addGraph(QCPAxis *keyAxis=nullptr, QCPAxis *valueAxis=nullptr);
+  QCPGraph *addGraph(QCPAxis *keyAxis=nullptr, QCPAxis *valueAxis=nullptr, bool addToLegend=true);
   bool removeGraph(QCPGraph *graph);
   bool removeGraph(int index);
   int clearGraphs();
@@ -4142,7 +4142,7 @@ class QCPAbstractPlottable1D : public QCPAbstractPlottable, public QCPPlottableI
   // No Q_OBJECT macro due to template class
   
 public:
-  QCPAbstractPlottable1D(QCPAxis *keyAxis, QCPAxis *valueAxis);
+  QCPAbstractPlottable1D(QCPAxis *keyAxis, QCPAxis *valueAxis, bool addToLegend=true);
   virtual ~QCPAbstractPlottable1D() Q_DECL_OVERRIDE;
   
   // virtual methods of 1d plottable interface:
@@ -4367,8 +4367,8 @@ private:
   "QCPAbstractPlottable" constructor and allocates the \a mDataContainer.
 */
 template <class DataType>
-QCPAbstractPlottable1D<DataType>::QCPAbstractPlottable1D(QCPAxis *keyAxis, QCPAxis *valueAxis) :
-  QCPAbstractPlottable(keyAxis, valueAxis),
+QCPAbstractPlottable1D<DataType>::QCPAbstractPlottable1D(QCPAxis *keyAxis, QCPAxis *valueAxis, bool addToLegend) :
+  QCPAbstractPlottable(keyAxis, valueAxis, addToLegend),
   mDataContainer(new QCPDataContainer<DataType>)
 {
 }
@@ -5509,7 +5509,7 @@ public:
                  };
   Q_ENUMS(LineStyle)
   
-  explicit QCPGraph(QCPAxis *keyAxis, QCPAxis *valueAxis);
+  explicit QCPGraph(QCPAxis *keyAxis, QCPAxis *valueAxis, bool addToLegend=true);
   virtual ~QCPGraph() Q_DECL_OVERRIDE;
   
   // getters:
@@ -5642,7 +5642,7 @@ public:
                  };
   Q_ENUMS(LineStyle)
   
-  explicit QCPCurve(QCPAxis *keyAxis, QCPAxis *valueAxis);
+  explicit QCPCurve(QCPAxis *keyAxis, QCPAxis *valueAxis, bool addToLegend=true);
   virtual ~QCPCurve() Q_DECL_OVERRIDE;
   
   // getters:

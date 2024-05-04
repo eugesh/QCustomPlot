@@ -11423,7 +11423,7 @@ bool QCPSelectionDecorator::registerWithPlottable(QCPAbstractPlottable *plottabl
   
   You probably want one of the subclasses like \ref QCPGraph or \ref QCPCurve instead.
 */
-QCPAbstractPlottable::QCPAbstractPlottable(QCPAxis *keyAxis, QCPAxis *valueAxis) :
+QCPAbstractPlottable::QCPAbstractPlottable(QCPAxis *keyAxis, QCPAxis *valueAxis, bool addToLegend) :
   QCPLayerable(keyAxis->parentPlot(), QString(), keyAxis->axisRect()),
   mName(),
   mAntialiasedFill(true),
@@ -11440,7 +11440,8 @@ QCPAbstractPlottable::QCPAbstractPlottable(QCPAxis *keyAxis, QCPAxis *valueAxis)
   if (keyAxis->orientation() == valueAxis->orientation())
     qDebug() << Q_FUNC_INFO << "keyAxis and valueAxis must be orthogonal to each other.";
   
-  mParentPlot->registerPlottable(this);
+  if (addToLegend)
+    mParentPlot->registerPlottable(this);
   setSelectionDecorator(new QCPSelectionDecorator);
 }
 
@@ -14432,7 +14433,7 @@ QCPGraph *QCustomPlot::graph() const
   
   \see graph, graphCount, removeGraph, clearGraphs
 */
-QCPGraph *QCustomPlot::addGraph(QCPAxis *keyAxis, QCPAxis *valueAxis)
+QCPGraph *QCustomPlot::addGraph(QCPAxis *keyAxis, QCPAxis *valueAxis, bool addToLegend)
 {
   if (!keyAxis) keyAxis = xAxis;
   if (!valueAxis) valueAxis = yAxis;
@@ -14447,7 +14448,7 @@ QCPGraph *QCustomPlot::addGraph(QCPAxis *keyAxis, QCPAxis *valueAxis)
     return nullptr;
   }
   
-  QCPGraph *newGraph = new QCPGraph(keyAxis, valueAxis);
+  QCPGraph *newGraph = new QCPGraph(keyAxis, valueAxis, addToLegend);
   newGraph->setName(QLatin1String("Graph ")+QString::number(mGraphs.size()));
   return newGraph;
 }
@@ -20869,8 +20870,8 @@ QCPGraphData::QCPGraphData(double key, double value) :
   
   To directly create a graph inside a plot, you can also use the simpler QCustomPlot::addGraph function.
 */
-QCPGraph::QCPGraph(QCPAxis *keyAxis, QCPAxis *valueAxis) :
-  QCPAbstractPlottable1D<QCPGraphData>(keyAxis, valueAxis),
+QCPGraph::QCPGraph(QCPAxis *keyAxis, QCPAxis *valueAxis, bool addToLegend) :
+  QCPAbstractPlottable1D<QCPGraphData>(keyAxis, valueAxis, addToLegend),
   mLineStyle{},
   mScatterSkip{},
   mAdaptiveSampling{}
@@ -22625,8 +22626,8 @@ QCPCurveData::QCPCurveData(double t, double key, double value) :
   keyAxis. This QCustomPlot instance takes ownership of the QCPCurve, so do not delete it manually
   but use QCustomPlot::removePlottable() instead.
 */
-QCPCurve::QCPCurve(QCPAxis *keyAxis, QCPAxis *valueAxis) :
-  QCPAbstractPlottable1D<QCPCurveData>(keyAxis, valueAxis),
+QCPCurve::QCPCurve(QCPAxis *keyAxis, QCPAxis *valueAxis, bool addToLegend) :
+  QCPAbstractPlottable1D<QCPCurveData>(keyAxis, valueAxis, addToLegend),
   mScatterSkip{},
   mLineStyle{}
 {
